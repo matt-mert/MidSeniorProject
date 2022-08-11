@@ -23,7 +23,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.MonoBehaviours
         private void Start()
         {
             ground.localScale = new Vector3(_map.MapSize.x+1f,1f,_map.MapSize.y+1f);
-            var groundRenderer = ground.GetComponent<MeshRenderer>();
+            var groundRenderer = ground.GetComponentInChildren<MeshRenderer>();
             groundRenderer.material.mainTextureScale = new Vector2(_map.MapSize.x / 2f, _map.MapSize.y / 2f);
 
             if (_map == null) return;
