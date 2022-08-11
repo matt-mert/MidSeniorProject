@@ -10,5 +10,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Data
         public Vector2Int startPosition;
         public int startLength;
         public Vector2 foodSpawnInterval;
+        public BridgeData[] bridgesData;
+        public TunnelData[] tunnelsData;
     }
 }

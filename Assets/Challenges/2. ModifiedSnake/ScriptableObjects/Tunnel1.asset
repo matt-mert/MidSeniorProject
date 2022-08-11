@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66f970977b37a4729a4f20a89a470605, type: 3}
-  m_Name: SnakeGameData
+  m_Script: {fileID: 11500000, guid: 1bc455a5604d0634baf5fa01a9cfe8f6, type: 3}
+  m_Name: Tunnel1
   m_EditorClassIdentifier: 
-  mapSize: {x: 8, y: 8}
-  secondsPerTile: 0.25
-  startPosition: {x: 1, y: 1}
-  startLength: 4
-  foodSpawnInterval: {x: 1, y: 3}
+  tunnelLength: 0
+  tunnelWidth: 0
+  tunnelLocation: {x: 0, y: 0}
+  tunnelDirection: 0
