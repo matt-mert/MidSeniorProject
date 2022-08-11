@@ -4,7 +4,11 @@ namespace Challenges._2._ModifiedSnake.Scripts.Data
     {
         None,
         Food,
-        SnakeBlock
+        SnakeBlock,
+        BridgeEntrance,
+        BridgeExit,
+        TunnelEntrance,
+        TunnelExit
     }
     
     public enum Direction

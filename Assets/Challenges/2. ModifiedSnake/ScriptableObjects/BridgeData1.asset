@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1bc455a5604d0634baf5fa01a9cfe8f6, type: 3}
-  m_Name: Tunnel1
+  m_Script: {fileID: 11500000, guid: dcf3699a2d98fa747bac649332703898, type: 3}
+  m_Name: BridgeData1
   m_EditorClassIdentifier: 
-  tunnelLength: 0
-  tunnelWidth: 0
-  tunnelLocation: {x: 0, y: 0}
-  tunnelDirection: 0
+  bridgeLength: 0
+  bridgeWidth: 0
+  bridgeLocation: {x: 0, y: 0}
+  bridgeDirection: 0
