@@ -15,8 +15,7 @@ MonoBehaviour:
   mapSize: {x: 8, y: 8}
   secondsPerTile: 0.25
   startPosition: {x: 1, y: 1}
-  startLength: 4
+  startLength: 3
   foodSpawnInterval: {x: 1, y: 3}
   bridgesData:
   - {fileID: 11400000, guid: 76c02b342c3a57642903f7d4d7f91b24, type: 2}
-  tunnelsData: []

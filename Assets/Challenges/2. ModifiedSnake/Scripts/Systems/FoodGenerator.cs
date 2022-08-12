@@ -13,7 +13,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
     /// <summary>
     /// Periodically spawns a food on the map
     /// </summary>
-    public class FoodGenerator : IFoodGenerator, IGameSystem , ISnakeMovementListener
+    public class FoodGenerator : IFoodGenerator, IGameSystem, ISnakeMovementListener
     {
         private readonly SnakeGameData _snakeGameData;
         private readonly FoodBlock.FoodBlockPool _foodBlockPool;
@@ -116,6 +116,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
 
         public void AfterSnakeMove(Vector2Int previousPosition, Vector2Int currentPosition)
         {
+
         }
     }
 }
