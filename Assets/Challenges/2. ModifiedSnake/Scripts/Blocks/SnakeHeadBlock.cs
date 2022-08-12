@@ -14,7 +14,5 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
             LastMovementDirection = Direction.Up;
             BehindBlock = null;
         }
-
-      
     }
 }

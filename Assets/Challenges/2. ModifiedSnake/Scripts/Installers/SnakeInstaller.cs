@@ -11,10 +11,16 @@ namespace Challenges._2._ModifiedSnake.Scripts.Installers
     /// </summary>
     public class SnakeInstaller : MonoInstaller
     {
+        public SnakeGameData snakeGameData;
+
         public SnakeBlock snakeBlockPrefab;
         public SnakeHeadBlock snakeHeadBlockPrefab;
         public FoodBlock foodPrefab;
-        public SnakeGameData snakeGameData;
+
+        public BridgeBlock bridgeBlockPrefab;
+        public BridgeEnterBlock bridgeEnterBlockPrefab;
+        public BridgeExitBlock bridgeExitBlockPrefab;
+
         public override void InstallBindings()
         {
             SignalBusInstaller.Install(Container);
@@ -28,7 +34,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Installers
             //If anyone requests a SnakeGameData instance, the 'snakeGameData' reference will be passed on
             Container.Bind<SnakeGameData>().FromInstance(snakeGameData).AsSingle().NonLazy();
             #endregion
-
             
             #region Managers
             //The systems aren't accessible through concrete types. If someone requested an GameStateHandler, Zenject would throw an exception
@@ -42,8 +47,9 @@ namespace Challenges._2._ModifiedSnake.Scripts.Installers
             Container.BindInterfacesTo<SnakeBodyController>().AsSingle().NonLazy();
             Container.BindInterfacesTo<SnakeMovementController>().AsSingle().NonLazy();
             Container.BindInterfacesTo<GameStateHandler>().AsSingle().NonLazy();
+
+            Container.BindInterfacesTo<BridgeGenerator>().AsSingle().NonLazy();
             #endregion
-            
 
             #region Utility
             Container.BindInterfacesTo<Map>().AsSingle().NonLazy();
@@ -58,6 +64,11 @@ namespace Challenges._2._ModifiedSnake.Scripts.Installers
             //The following are Zenject's own pools. They will handle all the work of pooling (and injecting into the elements in the pool)
             Container.BindMemoryPool<SnakeBlock, SnakeBlock.SnakeBlockPool>().WithInitialSize(snakeGameData.startLength).FromComponentInNewPrefab(snakeBlockPrefab).UnderTransformGroup("SnakeBlocks").NonLazy();
             Container.BindMemoryPool<FoodBlock, FoodBlock.FoodBlockPool>().FromComponentInNewPrefab(foodPrefab).UnderTransformGroup("FoodBlocks").NonLazy();
+
+            //The prefabs required for the bridge to be instantiated.
+            Container.BindMemoryPool<BridgeBlock, BridgeBlock.BridgeBlockPool>().FromComponentInNewPrefab(bridgeBlockPrefab).UnderTransformGroup("BridgeBlocks").NonLazy();
+            Container.BindMemoryPool<BridgeEnterBlock, BridgeEnterBlock.BridgeEnterBlockPool>().FromComponentInNewPrefab(bridgeEnterBlockPrefab).UnderTransformGroup("BridgeEnterBlocks").NonLazy();
+            Container.BindMemoryPool<BridgeExitBlock, BridgeExitBlock.BridgeExitBlockPool>().FromComponentInNewPrefab(bridgeExitBlockPrefab).UnderTransformGroup("BridgeExitBlocks").NonLazy();
             #endregion
         }
     }

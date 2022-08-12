@@ -68,6 +68,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             _signalBus.Unsubscribe<LevelCompleteEvent>(OnLevelComplete);
             _signalBus.Unsubscribe<LevelFailedEvent>(OnLevelFailed);
         }
+
         public void StartGame()
         {
             ClearGame();
@@ -101,7 +102,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             StartGame();
         }
 
-
         private void OnLevelComplete()
         {
             EndGame();
@@ -113,7 +113,5 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             EndGame();
             Debug.Log("LEVEL FAILED");
         }
-
-       
     }
 }

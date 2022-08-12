@@ -8,8 +8,6 @@ using UnityEngine;
 
 namespace Challenges._2._ModifiedSnake.Scripts.Systems
 {
-    
-
     public class SnakeMovementController : IGameSystem, IInputListener
     {
         private readonly SnakeGameData _snakeGameData;
@@ -22,7 +20,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         private CancellationTokenSource _src;
         private bool _loopActive = false;
         private Direction _currentDirection;
-
 
         public SnakeMovementController(SnakeGameData snakeGameData, IMap map, IOccupancyHandler occupancyHandler, IGameStateHandler gameStateHandler, SnakeHeadBlock snakeHeadBlock, ISnakeMovementListener[] snakeMovementListeners)
         {
@@ -53,7 +50,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
                 isCancelled = await UniTask.NextFrame(token).SuppressCancellationThrow();
             }
         }
-
 
         private bool CanMoveTo(Vector2Int position)
         {

@@ -24,7 +24,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         private bool _running = false;
         private Dictionary<Vector2Int,FoodBlock> _spawnedBlocks;
 
-        public FoodGenerator(SnakeGameData snakeGameData,ISnakeBodyController snakeBodyController,FoodBlock.FoodBlockPool foodBlockPool, IMap map,IOccupancyHandler occupancyHandler)
+        public FoodGenerator(SnakeGameData snakeGameData, ISnakeBodyController snakeBodyController, FoodBlock.FoodBlockPool foodBlockPool,
+            IMap map, IOccupancyHandler occupancyHandler)
         {
             _snakeGameData = snakeGameData;
             _snakeBodyController = snakeBodyController;

@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace Challenges._2._ModifiedSnake.Scripts.Systems
 {
-    
     public class SnakeBodyController : ISnakeBodyController, IGameSystem
     {
         private readonly IOccupancyHandler _occupancyHandler;
@@ -16,7 +15,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         private readonly IGameStateHandler _gameStateHandler;
         private readonly IMap _map;
         private List<SnakeBlock> _spawnedBlocks = new List<SnakeBlock>();
-
 
         public SnakeBodyController(IOccupancyHandler occupancyHandler, SnakeGameData snakeGameData, SnakeHeadBlock snakeHeadBlock, SnakeBlock.SnakeBlockPool snakeBlockPool, IGameStateHandler gameStateHandler, IMap map)
         {
