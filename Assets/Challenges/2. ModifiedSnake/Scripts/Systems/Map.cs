@@ -6,9 +6,6 @@ using Random = UnityEngine.Random;
 
 namespace Challenges._2._ModifiedSnake.Scripts.Systems
 {
-    
-    
-    
     public class Map : IMap
     {
         private SnakeGameData _snakeGameData;
@@ -105,6 +102,5 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             newPosition.y = newPosition.y % _snakeGameData.mapSize.y;
             return newPosition;
         }
-        
     }
 }

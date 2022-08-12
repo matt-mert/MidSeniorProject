@@ -18,5 +18,5 @@ MonoBehaviour:
   startLength: 4
   foodSpawnInterval: {x: 1, y: 3}
   bridgesData:
-  - {fileID: 11400000, guid: d0fcc4c0fb4940d41b9b4f472a9eb588, type: 2}
+  - {fileID: 11400000, guid: 76c02b342c3a57642903f7d4d7f91b24, type: 2}
   tunnelsData: []
