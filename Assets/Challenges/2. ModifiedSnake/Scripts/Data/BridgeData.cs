@@ -6,7 +6,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Data
     public class BridgeData : ScriptableObject
     {
         [Header("Bottom-left corner of the map is (0,0)")]
-        public Vector2Int bridgeStartCoord;
+        public Vector3Int bridgeStartCoord;
         public BridgeDirection bridgeDirection;
         public int bridgeLength;
     }

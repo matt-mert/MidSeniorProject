@@ -19,8 +19,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         private readonly IMap _map;
         private readonly BridgePlatformBlock.BridgePlatformBlockPool _bridgePlatformBlockPool;
         private readonly BridgePortBlock.BridgePortBlockPool _bridgePortBlockPool;
-        private Dictionary<Vector2Int, BridgePlatformBlock> _spawnedPlatforms;
-        private Dictionary<Vector2Int, BridgePortBlock> _spawnedPorts;
+        private Dictionary<Vector3Int, BridgePlatformBlock> _spawnedPlatforms;
+        private Dictionary<Vector3Int, BridgePortBlock> _spawnedPorts;
 
         public BridgeGenerator(SnakeGameData snakeGameData, IOccupancyHandler occupancyHandler, IMap map,
             BridgePlatformBlock.BridgePlatformBlockPool bridgePlatformBlockPool, BridgePortBlock.BridgePortBlockPool bridgePortBlockPool)
@@ -30,8 +30,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             _map = map;
             _bridgePlatformBlockPool = bridgePlatformBlockPool;
             _bridgePortBlockPool = bridgePortBlockPool;
-            _spawnedPlatforms = new Dictionary<Vector2Int, BridgePlatformBlock>();
-            _spawnedPorts = new Dictionary<Vector2Int, BridgePortBlock>();
+            _spawnedPlatforms = new Dictionary<Vector3Int, BridgePlatformBlock>();
+            _spawnedPorts = new Dictionary<Vector3Int, BridgePortBlock>();
         }
 
         public void GenerateBridges()
@@ -71,7 +71,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
                 _occupancyHandler.SetOccupied(start, OccupancyType.BridgePort);
                 _occupancyHandler.SetOccupied(end, OccupancyType.BridgePort);
                 
-                foreach (Vector2Int vector in GetCoordsBetween(start, end))
+                foreach (Vector3Int vector in GetCoordsBetween(start, end))
                 {
                     _occupancyHandler.SetOccupied(vector, OccupancyType.BridgePlatform);
                 }
@@ -85,22 +85,22 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
         }
 
-        private List<Vector2Int> GetCoordsBetween(Vector2Int start, Vector2Int end)
+        private List<Vector3Int> GetCoordsBetween(Vector3Int start, Vector3Int end)
         {
             // This method specifically does not add starting and ending points.
-            var between = new List<Vector2Int>();
+            var between = new List<Vector3Int>();
             if (start.x == end.x)
             {
                 for (int i = start.y + 1; i < end.y; i++)
                 {
-                    between.Add(new Vector2Int(start.x, i));
+                    between.Add(new Vector3Int(start.x, i, 1));
                 }
             }
             else if (start.y == end.y)
             {
                 for (int i = start.x + 1; i < end.x; i++)
                 {
-                    between.Add(new Vector2Int(i, start.y));
+                    between.Add(new Vector3Int(i, start.y, 1));
                 }
             }
             else
@@ -111,10 +111,10 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             return between;
         }
 
-        private Vector2Int BridgeDirToWorld(BridgeDirection dir)
+        private Vector3Int BridgeDirToWorld(BridgeDirection dir)
         {
-            if (dir == BridgeDirection.UpVertical) return Vector2Int.up;
-            else if (dir == BridgeDirection.RightHorizontal) return Vector2Int.right;
+            if (dir == BridgeDirection.UpVertical) return Vector3Int.up;
+            else if (dir == BridgeDirection.RightHorizontal) return Vector3Int.right;
             else throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
         }
 
@@ -153,12 +153,12 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             ClearBridges();
         }
 
-        public void BeforeSnakeMove(Vector2Int currentPosition, Vector2Int targetPosition)
+        public void BeforeSnakeMove(Vector3Int currentPosition, Vector3Int targetPosition)
         {
 
         }
 
-        public void AfterSnakeMove(Vector2Int previousPosition, Vector2Int currentPosition)
+        public void AfterSnakeMove(Vector3Int previousPosition, Vector3Int currentPosition)
         {
 
         }

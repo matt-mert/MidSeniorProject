@@ -22,7 +22,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         private readonly IOccupancyHandler _occupancyHandler;
         private CancellationTokenSource _cts;
         private bool _running = false;
-        private Dictionary<Vector2Int, FoodBlock> _spawnedBlocks;
+        private Dictionary<Vector3Int, FoodBlock> _spawnedBlocks;
 
         public FoodGenerator(SnakeGameData snakeGameData, ISnakeBodyController snakeBodyController, FoodBlock.FoodBlockPool foodBlockPool,
             IMap map, IOccupancyHandler occupancyHandler)
@@ -32,7 +32,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             _foodBlockPool = foodBlockPool;
             _map = map;
             _occupancyHandler = occupancyHandler;
-            _spawnedBlocks = new Dictionary<Vector2Int, FoodBlock>();
+            _spawnedBlocks = new Dictionary<Vector3Int, FoodBlock>();
         }
 
 
@@ -56,7 +56,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
         }
 
-        private void SpawnFoodIfPossible(Vector2Int randomPosition)
+        private void SpawnFoodIfPossible(Vector3Int randomPosition)
         {
             if (_occupancyHandler.GetOccupancy(randomPosition) == OccupancyType.None)
             {
@@ -103,7 +103,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             ClearFoods();
         }
 
-        public void BeforeSnakeMove(Vector2Int currentPosition, Vector2Int targetPosition)
+        public void BeforeSnakeMove(Vector3Int currentPosition, Vector3Int targetPosition)
         {
             var blockExists = _spawnedBlocks.ContainsKey(targetPosition);
             if (blockExists)
@@ -115,7 +115,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
         }
 
-        public void AfterSnakeMove(Vector2Int previousPosition, Vector2Int currentPosition)
+        public void AfterSnakeMove(Vector3Int previousPosition, Vector3Int currentPosition)
         {
 
         }

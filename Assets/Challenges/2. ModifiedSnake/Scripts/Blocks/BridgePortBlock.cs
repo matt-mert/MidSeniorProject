@@ -10,7 +10,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
     /// </summary>
     public class BridgePortBlock : MonoBehaviour
     {
-        public class BridgePortBlockPool : MonoMemoryPool<Vector2Int, BridgePortBlock>
+        public class BridgePortBlockPool : MonoMemoryPool<Vector3Int, BridgePortBlock>
         {
             protected override void OnSpawned(BridgePortBlock item)
             {
@@ -23,7 +23,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
                 item._occupancyHandler.ClearOccupancy(item._position);
             }
 
-            protected override void Reinitialize(Vector2Int p1, BridgePortBlock item)
+            protected override void Reinitialize(Vector3Int p1, BridgePortBlock item)
             {
                 base.Reinitialize(p1, item);
                 item._position = p1;
@@ -36,8 +36,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
         protected readonly IOccupancyHandler _occupancyHandler;
         [Inject]
         protected readonly IMap _map;
-        protected Vector2Int _position;
+        protected Vector3Int _position;
 
-        public Vector2Int Position => _position;
+        public Vector3Int Position => _position;
     }
 }

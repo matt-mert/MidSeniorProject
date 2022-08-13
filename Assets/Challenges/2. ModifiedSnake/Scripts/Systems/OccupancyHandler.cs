@@ -8,32 +8,32 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
     public class OccupancyHandler : IOccupancyHandler, IGameSystem
     {
         private IMap _map;
-        private Dictionary<Vector2Int,OccupancyType> _occupancy;
+        private Dictionary<Vector3Int,OccupancyType> _occupancy;
 
         public OccupancyHandler(IMap map)
         {
             _map = map;
-            _occupancy = new Dictionary<Vector2Int, OccupancyType>();
+            _occupancy = new Dictionary<Vector3Int, OccupancyType>();
         }
-        public void SetOccupied(Vector2Int coordinate, OccupancyType type)
+        public void SetOccupied(Vector3Int coordinate, OccupancyType type)
         {
             if (!_map.IsCoordinateValid(coordinate)) return;
-            if (!_occupancy.ContainsKey(coordinate)) _occupancy.Add(coordinate,type);
+            if (!_occupancy.ContainsKey(coordinate)) _occupancy.Add(coordinate, type);
             _occupancy[coordinate] = type;
         }
 
-        public void ClearOccupancy(Vector2Int coordinate)
+        public void ClearOccupancy(Vector3Int coordinate)
         {
             if (!_map.IsCoordinateValid(coordinate)) return;
             if (_occupancy.ContainsKey(coordinate)) _occupancy.Remove(coordinate);
         }
 
-        public OccupancyType GetOccupancy(Vector2Int coordinate)
+        public OccupancyType GetOccupancy(Vector3Int coordinate)
         {
             return !_occupancy.ContainsKey(coordinate) ? OccupancyType.None : _occupancy[coordinate];
         }
 
-        public bool IsOccupiedWith(Vector2Int coordinate, OccupancyType checkType)
+        public bool IsOccupiedWith(Vector3Int coordinate, OccupancyType checkType)
         {
             return GetOccupancy(coordinate) == checkType;
         }

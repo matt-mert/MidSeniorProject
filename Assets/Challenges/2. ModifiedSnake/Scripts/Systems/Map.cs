@@ -15,46 +15,46 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             _snakeGameData = snakeGameData;
         }
 
-        public Vector2Int MapSize => _snakeGameData.mapSize;
+        public Vector3Int MapSize => _snakeGameData.mapSize;
 
-        public bool IsCoordinateValid(Vector2Int coordinate)
+        public bool IsCoordinateValid(Vector3Int coordinate)
         {
             return coordinate.x >= 0 && coordinate.x < _snakeGameData.mapSize.x && coordinate.y >= 0 &&
-                   coordinate.y < _snakeGameData.mapSize.y;
+                   coordinate.y < _snakeGameData.mapSize.y && coordinate.z >= 0 && coordinate.z < _snakeGameData.mapSize.z;
         }
 
-        public Vector2Int DirectionToVector(Direction direction)
+        public Vector3Int DirectionToVector(Direction direction)
         {
             switch (direction)
             {
                 case Direction.Up:
-                    return Vector2Int.up;
+                    return Vector3Int.up;
                 case Direction.Right:
-                    return Vector2Int.right;
+                    return Vector3Int.right;
                 case Direction.Down:
-                    return Vector2Int.down;
+                    return Vector3Int.down;
                 case Direction.Left:
-                    return Vector2Int.left;
+                    return Vector3Int.left;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
         }
 
-        public Direction VectorToDirection(Vector2Int direction)
+        public Direction VectorToDirection(Vector3Int direction)
         {
-            if (direction == Vector2Int.up)
+            if (direction == Vector3Int.up)
             {
                 return Direction.Up;
             }
-            if (direction == Vector2Int.right)
+            if (direction == Vector3Int.right)
             {
                 return Direction.Right;
             }
-            if (direction == Vector2Int.left)
+            if (direction == Vector3Int.left)
             {
                 return Direction.Left;
             }
-            if (direction == Vector2Int.down)
+            if (direction == Vector3Int.down)
             {
                 return Direction.Down;
             }
@@ -79,20 +79,20 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
         }
         
-        public Vector2Int GetRandomCoordinate()
+        public Vector3Int GetRandomCoordinate()
         {
-            return new Vector2Int(Random.Range(0, _snakeGameData.mapSize.x),
-                Random.Range(0, _snakeGameData.mapSize.y));
+            return new Vector3Int(Random.Range(0, _snakeGameData.mapSize.x),
+                Random.Range(0, _snakeGameData.mapSize.y), 0);
         }
 
-        public Vector3 ToWorldPosition(Vector2Int coordinate)
+        public Vector3 ToWorldPosition(Vector3Int coordinate)
         {
             var worldHalfX = (MapSize.x + 1f) / 2f;
             var worldHalfY = (MapSize.y + 1f) / 2f;
-            return new Vector3(coordinate.x-worldHalfX+1, 0, coordinate.y-worldHalfY+1);
+            return new Vector3(coordinate.x-worldHalfX+1, coordinate.z, coordinate.y-worldHalfY+1);
         }
 
-        public Vector2Int GetNextCoordinate(Vector2Int coordinate, Direction direction)
+        public Vector3Int GetNextCoordinate(Vector3Int coordinate, Direction direction)
         {
             var delta = DirectionToVector(direction);
             var newPosition = coordinate + delta;

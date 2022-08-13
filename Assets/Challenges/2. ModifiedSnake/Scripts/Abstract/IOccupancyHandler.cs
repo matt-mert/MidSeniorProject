@@ -9,10 +9,10 @@ namespace Challenges._2._ModifiedSnake.Scripts.Abstract
     /// </summary>
     public interface IOccupancyHandler
     {
-        void SetOccupied(Vector2Int coordinate,OccupancyType type);
-        void ClearOccupancy(Vector2Int coordinate);
-        OccupancyType GetOccupancy(Vector2Int coordinate);
-        bool IsOccupiedWith(Vector2Int coordinate, OccupancyType checkType);
+        void SetOccupied(Vector3Int coordinate, OccupancyType type);
+        void ClearOccupancy(Vector3Int coordinate);
+        OccupancyType GetOccupancy(Vector3Int coordinate);
+        bool IsOccupiedWith(Vector3Int coordinate, OccupancyType checkType);
         void ClearAllOccupancies();
     }
 }

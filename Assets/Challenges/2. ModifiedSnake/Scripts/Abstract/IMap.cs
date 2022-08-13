@@ -8,13 +8,13 @@ namespace Challenges._2._ModifiedSnake.Scripts.Abstract
     /// </summary>
     public interface IMap
     {
-        Vector2Int MapSize { get; }
-        bool IsCoordinateValid(Vector2Int coordinate);
-        Vector2Int GetNextCoordinate(Vector2Int coordinate, Direction direction);
-        Vector2Int DirectionToVector(Direction direction);
-        Direction VectorToDirection(Vector2Int direction);
+        Vector3Int MapSize { get; }
+        bool IsCoordinateValid(Vector3Int coordinate);
+        Vector3Int GetNextCoordinate(Vector3Int coordinate, Direction direction);
+        Vector3Int DirectionToVector(Direction direction);
+        Direction VectorToDirection(Vector3Int direction);
         Direction Invert(Direction direction);
-        Vector2Int GetRandomCoordinate();
-        Vector3 ToWorldPosition(Vector2Int coordinate);
+        Vector3Int GetRandomCoordinate();
+        Vector3 ToWorldPosition(Vector3Int coordinate);
     }
 }

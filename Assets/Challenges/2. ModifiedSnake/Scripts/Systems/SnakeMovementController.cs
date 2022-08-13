@@ -51,7 +51,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
         }
 
-        private bool CanMoveTo(Vector2Int current, Vector2Int next)
+        private bool CanMoveTo(Vector3Int current, Vector3Int next)
         {
             bool occupiedWithSnake = _occupancyHandler.IsOccupiedWith(next, OccupancyType.SnakeBlock);
             bool occupiedWithDeadly = _occupancyHandler.IsOccupiedWith(next, OccupancyType.Deadly);

@@ -8,7 +8,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
     /// </summary>
     public class SnakeHeadBlock : SnakeBlock
     {
-        public void Respawn(Vector2Int position)
+        public void Respawn(Vector3Int position)
         {
             SetPosition(position);
             LastMovementDirection = Direction.Up;
