@@ -52,7 +52,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
         {
             var prevCoordinate = _coordinate;
             SetPosition(targetCoordinate);
-            if(BehindBlock!=null) BehindBlock.Move(prevCoordinate);
+            if (BehindBlock != null) BehindBlock.Move(prevCoordinate);
         }
 
         protected void SetPosition(Vector3Int targetCoordinate)

@@ -8,7 +8,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
     public class OccupancyHandler : IOccupancyHandler, IGameSystem
     {
         private IMap _map;
-        private Dictionary<Vector3Int,OccupancyType> _occupancy;
+        private Dictionary<Vector3Int, OccupancyType> _occupancy;
 
         public OccupancyHandler(IMap map)
         {

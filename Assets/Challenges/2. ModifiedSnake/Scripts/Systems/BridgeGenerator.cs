@@ -73,7 +73,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
                 
                 foreach (Vector3Int vector in GetCoordsBetween(start, end))
                 {
-                    _occupancyHandler.SetOccupied(vector, OccupancyType.BridgePlatform);
+                    _occupancyHandler.SetOccupied(vector, OccupancyType.None);
                 }
 
                 // Spawn the bridge here.
@@ -87,7 +87,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
 
         private List<Vector3Int> GetCoordsBetween(Vector3Int start, Vector3Int end)
         {
-            // This method specifically does not add starting and ending points.
+            // This method specifically does not add starting and ending points
+            // because they are bridge ports which are the elevation points.
             var between = new List<Vector3Int>();
             if (start.x == end.x)
             {

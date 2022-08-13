@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcf3699a2d98fa747bac649332703898, type: 3}
   m_Name: BridgeData1
   m_EditorClassIdentifier: 
-  bridgeStartCoord: {x: 0, y: 0}
+  bridgeStartCoord: {x: 0, y: 0, z: 0}
   bridgeDirection: 0
-  bridgeLength: 2
+  bridgeLength: 3

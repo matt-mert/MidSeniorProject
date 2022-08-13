@@ -34,15 +34,27 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
                 {
                     case Direction.Up:
                         item.transform.rotation = Quaternion.identity;
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.down, OccupancyType.BridgeAccept);
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.left, OccupancyType.BridgeReject);
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.right, OccupancyType.BridgeReject);
                         break;
                     case Direction.Right:
-                        item.transform.rotation = Quaternion.identity;
+                        item.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.down, OccupancyType.BridgeAccept);
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.left, OccupancyType.BridgeReject);
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.right, OccupancyType.BridgeReject);
                         break;
                     case Direction.Down:
-                        item.transform.rotation = Quaternion.identity;
+                        item.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.down, OccupancyType.BridgeAccept);
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.left, OccupancyType.BridgeReject);
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.right, OccupancyType.BridgeReject);
                         break;
                     case Direction.Left:
-                        item.transform.rotation = Quaternion.identity;
+                        item.transform.rotation = Quaternion.Euler(new Vector3(0, 270, 0));
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.down, OccupancyType.BridgeAccept);
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.left, OccupancyType.BridgeReject);
+                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.right, OccupancyType.BridgeReject);
                         break;
                     default:
                         break;

@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66f970977b37a4729a4f20a89a470605, type: 3}
   m_Name: SnakeGameData
   m_EditorClassIdentifier: 
-  mapSize: {x: 8, y: 8}
+  mapSize: {x: 8, y: 8, z: 1}
   secondsPerTile: 0.25
-  startPosition: {x: 1, y: 1}
+  startPosition: {x: 4, y: 4, z: 0}
   startLength: 3
   foodSpawnInterval: {x: 1, y: 3}
-  bridgesData:
-  - {fileID: 11400000, guid: 76c02b342c3a57642903f7d4d7f91b24, type: 2}
+  bridgesData: []

@@ -89,7 +89,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         {
             var worldHalfX = (MapSize.x + 1f) / 2f;
             var worldHalfY = (MapSize.y + 1f) / 2f;
-            return new Vector3(coordinate.x-worldHalfX+1, coordinate.z, coordinate.y-worldHalfY+1);
+            return new Vector3(coordinate.x-worldHalfX+1, 0, coordinate.y-worldHalfY+1);
         }
 
         public Vector3Int GetNextCoordinate(Vector3Int coordinate, Direction direction)
@@ -100,6 +100,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             newPosition.y = newPosition.y < 0 ? newPosition.y + _snakeGameData.mapSize.y : newPosition.y;
             newPosition.x = newPosition.x % _snakeGameData.mapSize.x;
             newPosition.y = newPosition.y % _snakeGameData.mapSize.y;
+            newPosition.z = 0;
             return newPosition;
         }
     }

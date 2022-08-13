@@ -8,7 +8,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Data
         BridgePort,
         BridgeReject,
         BridgeAccept,
-        BridgePlatform,
         Deadly
     }
 
