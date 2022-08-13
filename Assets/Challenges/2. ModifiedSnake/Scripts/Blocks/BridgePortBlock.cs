@@ -6,29 +6,29 @@ using Zenject;
 namespace Challenges._2._ModifiedSnake.Scripts.Blocks
 {
     /// <summary>
-    /// The platform blocks of the bridge.
+    /// The enter block of the bridge.
     /// </summary>
-    public class BridgeBlock : MonoBehaviour
+    public class BridgePortBlock : MonoBehaviour
     {
-        public class BridgeBlockPool : MonoMemoryPool<Vector2Int, BridgeBlock>
+        public class BridgePortBlockPool : MonoMemoryPool<Vector2Int, BridgePortBlock>
         {
-            protected override void OnSpawned(BridgeBlock item)
+            protected override void OnSpawned(BridgePortBlock item)
             {
                 base.OnSpawned(item);
             }
 
-            protected override void OnDespawned(BridgeBlock item)
+            protected override void OnDespawned(BridgePortBlock item)
             {
                 base.OnDespawned(item);
                 item._occupancyHandler.ClearOccupancy(item._position);
             }
 
-            protected override void Reinitialize(Vector2Int p1, BridgeBlock item)
+            protected override void Reinitialize(Vector2Int p1, BridgePortBlock item)
             {
                 base.Reinitialize(p1, item);
                 item._position = p1;
                 item.transform.position = item._map.ToWorldPosition(p1);
-                item._occupancyHandler.SetOccupied(item._position, OccupancyType.Food);
+                item._occupancyHandler.SetOccupied(item._position, OccupancyType.None);
             }
         }
 

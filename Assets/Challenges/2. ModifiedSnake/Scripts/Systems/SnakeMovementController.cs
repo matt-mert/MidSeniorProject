@@ -51,15 +51,21 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
         }
 
-        private bool CanMoveTo(Vector2Int position)
+        private bool CanMoveTo(Vector2Int current, Vector2Int next)
         {
-            return !_occupancyHandler.IsOccupiedWith(position, OccupancyType.SnakeBlock);
+            bool occupiedWithSnake = _occupancyHandler.IsOccupiedWith(next, OccupancyType.SnakeBlock);
+            bool occupiedWithDeadly = _occupancyHandler.IsOccupiedWith(next, OccupancyType.Deadly);
+            bool failedToEnterBridge = (_occupancyHandler.IsOccupiedWith(current, OccupancyType.BridgeReject))
+                && (_occupancyHandler.IsOccupiedWith(next, OccupancyType.BridgePort));
+            if (occupiedWithSnake || occupiedWithDeadly || failedToEnterBridge) return false;
+            else return true;
         }
 
         private void RealizeMovement()
         {
+            var currentPosition = _snakeHeadBlock.Coordinate;
             var nextPosition = _map.GetNextCoordinate(_snakeHeadBlock.Coordinate, _currentDirection);
-            if (CanMoveTo(nextPosition))
+            if (CanMoveTo(currentPosition, nextPosition))
             {
                 var previousPosition = _snakeHeadBlock.Coordinate;
                 foreach (var snakeMovementListener in _snakeMovementListeners)

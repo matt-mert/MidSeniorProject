@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Challenges._2._ModifiedSnake.Scripts.Abstract;
 using Challenges._2._ModifiedSnake.Scripts.Data;
@@ -73,6 +74,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         {
             ClearGame();
             _gameStateHandler.ResetScore();
+
             foreach (var system in _gameSystems)
             {
                 system.StartSystem();

@@ -5,11 +5,9 @@ namespace Challenges._2._ModifiedSnake.Scripts.Data
     [CreateAssetMenu(fileName = "BridgeData", menuName = "SnakeImprovementChallenge/BridgeData")]
     public class BridgeData : ScriptableObject
     {
+        [Header("Bottom-left corner of the map is (0,0)")]
+        public Vector2Int bridgeStartCoord;
+        public BridgeDirection bridgeDirection;
         public int bridgeLength;
-        public int bridgeWidth;
-        [Header("Bottom-left corner is (0,0) location.")]
-        public Vector2Int bridgeLocation;
-        [Header("None direction is not a valid option.")]
-        public Direction bridgeDirection;
     }
 }

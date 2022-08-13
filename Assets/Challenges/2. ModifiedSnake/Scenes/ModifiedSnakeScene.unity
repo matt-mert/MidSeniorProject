@@ -1149,10 +1149,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38f66ec7cc2d44727b8576a68b621264, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  snakeGameData: {fileID: 11400000, guid: 3727d3010aae64f9e941e58b81b09230, type: 2}
   snakeBlockPrefab: {fileID: 6724644003154045272, guid: a9a3cce2bd58a439eb13c06009b0d1be, type: 3}
   snakeHeadBlockPrefab: {fileID: 7029334262958794995, guid: 3a4a9fe2f4fa14bc5b13339aa4f634ad, type: 3}
   foodPrefab: {fileID: 7776847809580787147, guid: a6fc25a79e3db4d93b40fd0dd1e1e5f9, type: 3}
-  snakeGameData: {fileID: 11400000, guid: 3727d3010aae64f9e941e58b81b09230, type: 2}
+  bridgePlatformBlockPrefab: {fileID: 4063856247737476986, guid: aca473329a247ae44ac4f74f50d13510, type: 3}
+  bridgePortBlockPrefab: {fileID: 6139473231993224756, guid: ddfe567999f033749848d2973059bbab, type: 3}
 --- !u!1 &2114619747
 GameObject:
   m_ObjectHideFlags: 0

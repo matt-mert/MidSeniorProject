@@ -17,9 +17,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Installers
         public SnakeHeadBlock snakeHeadBlockPrefab;
         public FoodBlock foodPrefab;
 
-        public BridgeBlock bridgeBlockPrefab;
-        public BridgeEnterBlock bridgeEnterBlockPrefab;
-        public BridgeExitBlock bridgeExitBlockPrefab;
+        public BridgePlatformBlock bridgePlatformBlockPrefab;
+        public BridgePortBlock bridgePortBlockPrefab;
 
         public override void InstallBindings()
         {
@@ -66,9 +65,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Installers
             Container.BindMemoryPool<FoodBlock, FoodBlock.FoodBlockPool>().FromComponentInNewPrefab(foodPrefab).UnderTransformGroup("FoodBlocks").NonLazy();
 
             //The prefabs required for the bridge to be instantiated.
-            Container.BindMemoryPool<BridgeBlock, BridgeBlock.BridgeBlockPool>().FromComponentInNewPrefab(bridgeBlockPrefab).UnderTransformGroup("BridgeBlocks").NonLazy();
-            Container.BindMemoryPool<BridgeEnterBlock, BridgeEnterBlock.BridgeEnterBlockPool>().FromComponentInNewPrefab(bridgeEnterBlockPrefab).UnderTransformGroup("BridgeEnterBlocks").NonLazy();
-            Container.BindMemoryPool<BridgeExitBlock, BridgeExitBlock.BridgeExitBlockPool>().FromComponentInNewPrefab(bridgeExitBlockPrefab).UnderTransformGroup("BridgeExitBlocks").NonLazy();
+            Container.BindMemoryPool<BridgePlatformBlock, BridgePlatformBlock.BridgePlatformBlockPool>().FromComponentInNewPrefab(bridgePlatformBlockPrefab).UnderTransformGroup("BridgeBlocks").NonLazy();
+            Container.BindMemoryPool<BridgePortBlock, BridgePortBlock.BridgePortBlockPool>().FromComponentInNewPrefab(bridgePortBlockPrefab).UnderTransformGroup("BridgeEnterBlocks").NonLazy();
             #endregion
         }
     }

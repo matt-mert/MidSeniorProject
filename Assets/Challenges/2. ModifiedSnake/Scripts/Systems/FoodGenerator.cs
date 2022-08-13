@@ -22,7 +22,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         private readonly IOccupancyHandler _occupancyHandler;
         private CancellationTokenSource _cts;
         private bool _running = false;
-        private Dictionary<Vector2Int,FoodBlock> _spawnedBlocks;
+        private Dictionary<Vector2Int, FoodBlock> _spawnedBlocks;
 
         public FoodGenerator(SnakeGameData snakeGameData, ISnakeBodyController snakeBodyController, FoodBlock.FoodBlockPool foodBlockPool,
             IMap map, IOccupancyHandler occupancyHandler)
@@ -32,7 +32,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             _foodBlockPool = foodBlockPool;
             _map = map;
             _occupancyHandler = occupancyHandler;
-            _spawnedBlocks = new Dictionary<Vector2Int,FoodBlock>();
+            _spawnedBlocks = new Dictionary<Vector2Int, FoodBlock>();
         }
 
 
