@@ -51,32 +51,44 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
         }
 
-        private bool CanMoveTo(Vector3Int current, Vector3Int next)
+        private bool CanMoveTo(Vector3Int previous, Vector3Int current)
         {
-            bool occupiedWithSnake = _occupancyHandler.IsOccupiedWith(next, OccupancyType.SnakeBlock);
-            bool occupiedWithDeadly = _occupancyHandler.IsOccupiedWith(next, OccupancyType.Deadly);
-            bool failedToEnterBridge = (_occupancyHandler.IsOccupiedWith(current, OccupancyType.BridgeReject))
-                && (_occupancyHandler.IsOccupiedWith(next, OccupancyType.BridgePort));
+            bool occupiedWithSnake = _occupancyHandler.IsOccupiedWith(current, OccupancyType.SnakeBlock);
+            bool occupiedWithDeadly = _occupancyHandler.IsOccupiedWith(current, OccupancyType.Deadly);
+            bool failedToEnterBridge = (_occupancyHandler.IsOccupiedWith(previous, OccupancyType.BridgeReject))
+                && (_occupancyHandler.IsOccupiedWith(current, OccupancyType.BridgePort));
             if (occupiedWithSnake || occupiedWithDeadly || failedToEnterBridge) return false;
             else return true;
         }
 
         private void RealizeMovement()
         {
-            var currentPosition = _snakeHeadBlock.Coordinate;
-            var nextPosition = _map.GetNextCoordinate(_snakeHeadBlock.Coordinate, _currentDirection);
-            if (CanMoveTo(currentPosition, nextPosition))
+            var previousPosition = _snakeHeadBlock.Coordinate;
+            var currentPosition = _map.GetNextCoordinate(_snakeHeadBlock.Coordinate, _currentDirection);
+            if (CanMoveTo(previousPosition, currentPosition))
             {
-                var previousPosition = _snakeHeadBlock.Coordinate;
                 foreach (var snakeMovementListener in _snakeMovementListeners)
                 {
-                    snakeMovementListener.BeforeSnakeMove(previousPosition, nextPosition);
+                    snakeMovementListener.BeforeSnakeMove(previousPosition, currentPosition);
+                }
+
+                if (_occupancyHandler.IsOccupiedWith(previousPosition, OccupancyType.BridgeAccept) &&
+                    _occupancyHandler.IsOccupiedWith(currentPosition, OccupancyType.BridgePort))
+                {
+                    RotateInDirection(_currentDirection);
+                }
+
+                if (_occupancyHandler.IsOccupiedWith(previousPosition, OccupancyType.BridgePort) &&
+                    _occupancyHandler.IsOccupiedWith(currentPosition, OccupancyType.BridgePlatform))
+                {
+                    RotateInDirection(_currentDirection);
                 }
 
                 MoveInDirection(_currentDirection);
+
                 foreach (var snakeMovementListener in _snakeMovementListeners)
                 {
-                    snakeMovementListener.AfterSnakeMove(previousPosition, nextPosition);
+                    snakeMovementListener.AfterSnakeMove(previousPosition, currentPosition);
                 }
             }
             else
@@ -89,6 +101,27 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         {
             var nextPosition = _map.GetNextCoordinate(_snakeHeadBlock.Coordinate, direction);
             _snakeHeadBlock.Move(nextPosition);
+        }
+
+        private void RotateInDirection(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Up:
+                    _snakeHeadBlock.transform.Rotate(new Vector3(0, 0, -45));
+                    break;
+                case Direction.Right:
+                    _snakeHeadBlock.transform.Rotate(new Vector3(-45, 0, 0));
+                    break;
+                case Direction.Down:
+                    _snakeHeadBlock.transform.Rotate(new Vector3(0, 0, 45));
+                    break;
+                case Direction.Left:
+                    _snakeHeadBlock.transform.Rotate(new Vector3(45, 0, 0));
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void StartSystem()

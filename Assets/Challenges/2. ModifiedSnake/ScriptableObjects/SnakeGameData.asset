@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapSize: {x: 8, y: 8, z: 1}
   secondsPerTile: 0.25
-  startPosition: {x: 4, y: 4, z: 0}
+  startPosition: {x: 6, y: 1, z: 0}
   startLength: 3
   foodSpawnInterval: {x: 1, y: 3}
-  bridgesData: []
+  bridgesData:
+  - {fileID: 11400000, guid: 76c02b342c3a57642903f7d4d7f91b24, type: 2}
+  - {fileID: 11400000, guid: 0461a2071f13d6646b7137ffdc5f91cb, type: 2}

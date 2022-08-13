@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Challenges._2._ModifiedSnake.Scripts.Abstract;
 using Challenges._2._ModifiedSnake.Scripts.Blocks;
 using Challenges._2._ModifiedSnake.Scripts.Data;
-using Challenges._2._ModifiedSnake.Scripts.Systems;
 using UnityEngine;
 using Zenject;
 
@@ -51,7 +50,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         private void SpawnBridgeIfPossible(BridgeData bridgeData)
         {
             var start = bridgeData.bridgeStartCoord;
-            var end = bridgeData.bridgeStartCoord + BridgeDirToWorld(bridgeData.bridgeDirection) * bridgeData.bridgeLength;
+            var end = bridgeData.bridgeStartCoord + _map.DirectionToVector(BridgeToDirection(bridgeData.bridgeDirection)) * bridgeData.bridgeLength;
+            var betweens = GetCoordsBetween(start, end);
 
             if (!_map.IsCoordinateValid(start) || !_map.IsCoordinateValid(end))
             {
@@ -68,15 +68,23 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             if ((_occupancyHandler.GetOccupancy(start) == OccupancyType.None) && 
                 (_occupancyHandler.GetOccupancy(end) == OccupancyType.None))
             {
-                _occupancyHandler.SetOccupied(start, OccupancyType.BridgePort);
-                _occupancyHandler.SetOccupied(end, OccupancyType.BridgePort);
-                
-                foreach (Vector3Int vector in GetCoordsBetween(start, end))
-                {
-                    _occupancyHandler.SetOccupied(vector, OccupancyType.None);
-                }
 
                 // Spawn the bridge here.
+
+                var entryPort = _bridgePortBlockPool.Spawn(start, BridgeToDirection(bridgeData.bridgeDirection));
+                _spawnedPorts.Add(start, entryPort);
+                _occupancyHandler.SetOccupied(start, OccupancyType.BridgePort);
+                var endPort = _bridgePortBlockPool.Spawn(end, _map.Invert(BridgeToDirection(bridgeData.bridgeDirection)));
+                _spawnedPorts.Add(end, endPort);
+                _occupancyHandler.SetOccupied(end, OccupancyType.BridgePort);
+
+                for (int i = 0; i < betweens.Count; i++)
+                {
+                    var platform = _bridgePlatformBlockPool.Spawn(betweens[i]);
+                    if (!_spawnedPlatforms.ContainsKey(betweens[i])) _spawnedPlatforms.Add(betweens[i], platform);
+                    _occupancyHandler.SetOccupied(betweens[i], OccupancyType.BridgePlatform);
+                }
+
             }
             else
             {
@@ -85,10 +93,29 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
         }
 
+        private Direction BridgeToDirection(BridgeDirection bd)
+        {
+            switch (bd)
+            {
+                case BridgeDirection.UpVertical:
+                    return Direction.Up;
+                case BridgeDirection.RightHorizontal:
+                    return Direction.Right;
+                default:
+                    return Direction.None;
+            }
+        }
+
+        /// <summary>
+        /// This method does not add starting and ending points since
+        /// they are the start and end ports of the bridge.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         private List<Vector3Int> GetCoordsBetween(Vector3Int start, Vector3Int end)
         {
-            // This method specifically does not add starting and ending points
-            // because they are bridge ports which are the elevation points.
             var between = new List<Vector3Int>();
             if (start.x == end.x)
             {
@@ -110,13 +137,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
 
             return between;
-        }
-
-        private Vector3Int BridgeDirToWorld(BridgeDirection dir)
-        {
-            if (dir == BridgeDirection.UpVertical) return Vector3Int.up;
-            else if (dir == BridgeDirection.RightHorizontal) return Vector3Int.right;
-            else throw new ArgumentOutOfRangeException(nameof(dir), dir, null);
         }
 
         public void ClearBridges()

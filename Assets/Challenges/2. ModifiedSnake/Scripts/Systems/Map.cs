@@ -89,7 +89,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         {
             var worldHalfX = (MapSize.x + 1f) / 2f;
             var worldHalfY = (MapSize.y + 1f) / 2f;
-            return new Vector3(coordinate.x-worldHalfX+1, 0, coordinate.y-worldHalfY+1);
+            float yValue = coordinate.z * 0.7f;
+            return new Vector3(coordinate.x-worldHalfX+1, yValue, coordinate.y-worldHalfY+1);
         }
 
         public Vector3Int GetNextCoordinate(Vector3Int coordinate, Direction direction)

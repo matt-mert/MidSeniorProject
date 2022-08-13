@@ -6,6 +6,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Data
         Food,
         SnakeBlock,
         BridgePort,
+        BridgePlatform,
         BridgeReject,
         BridgeAccept,
         Deadly

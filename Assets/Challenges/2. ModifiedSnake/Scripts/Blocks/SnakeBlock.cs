@@ -48,11 +48,17 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
             BehindBlock = snakeBlock;
         }
 
+        // Added rotation as well.
         public void Move(Vector3Int targetCoordinate)
         {
             var prevCoordinate = _coordinate;
+            var prevRotation = transform.rotation;
             SetPosition(targetCoordinate);
-            if (BehindBlock != null) BehindBlock.Move(prevCoordinate);
+            if (BehindBlock != null)
+            {
+                BehindBlock.Move(prevCoordinate);
+                BehindBlock.transform.rotation = prevRotation;
+            }
         }
 
         protected void SetPosition(Vector3Int targetCoordinate)
