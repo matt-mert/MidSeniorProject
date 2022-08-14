@@ -11,21 +11,23 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
     /// <summary>
     /// Generates the desired bridges in the beginning of the game.
     /// </summary>
-    public class BridgeGenerator : IBridgeGenerator, IInitializable, IGameSystem, ISnakeMovementListener
+    public class BridgeGenerator : IBridgeGenerator, IInitializable, IGameSystem
     {
         private readonly SnakeGameData _snakeGameData;
         private readonly IOccupancyHandler _occupancyHandler;
+        private readonly IBlockTypeHandler _blockTypeHandler;
         private readonly IMap _map;
         private readonly BridgePlatformBlock.BridgePlatformBlockPool _bridgePlatformBlockPool;
         private readonly BridgePortBlock.BridgePortBlockPool _bridgePortBlockPool;
         private Dictionary<Vector3Int, BridgePlatformBlock> _spawnedPlatforms;
         private Dictionary<Vector3Int, BridgePortBlock> _spawnedPorts;
 
-        public BridgeGenerator(SnakeGameData snakeGameData, IOccupancyHandler occupancyHandler, IMap map,
+        public BridgeGenerator(SnakeGameData snakeGameData, IOccupancyHandler occupancyHandler, IBlockTypeHandler blockTypeHandler, IMap map,
             BridgePlatformBlock.BridgePlatformBlockPool bridgePlatformBlockPool, BridgePortBlock.BridgePortBlockPool bridgePortBlockPool)
         {
             _snakeGameData = snakeGameData;
             _occupancyHandler = occupancyHandler;
+            _blockTypeHandler = blockTypeHandler;
             _map = map;
             _bridgePlatformBlockPool = bridgePlatformBlockPool;
             _bridgePortBlockPool = bridgePortBlockPool;
@@ -65,49 +67,58 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
                 return;
             }
 
+            if ((_blockTypeHandler.GetBlockType(start + Vector3Int.forward) == BlockType.BridgePlatform) ||
+                (_blockTypeHandler.GetBlockType(end + Vector3Int.forward) == BlockType.BridgePlatform))
+            {
+                Debug.Log("A bridge could not be spawned due to one of its ports falling under a platform.");
+                return;
+            }
+
             if ((_occupancyHandler.GetOccupancy(start) == OccupancyType.None) && 
-                (_occupancyHandler.GetOccupancy(end) == OccupancyType.None))
+                (_occupancyHandler.GetOccupancy(end) == OccupancyType.None) &&
+                (_blockTypeHandler.GetBlockType(start) != BlockType.BridgePort) &&
+                (_blockTypeHandler.GetBlockType(end) != BlockType.BridgePort))
             {
 
                 // Spawn the bridge here.
 
                 var entryPort = _bridgePortBlockPool.Spawn(start, BridgeToDirection(bridgeData.bridgeDirection));
                 _spawnedPorts.Add(start, entryPort);
-                _occupancyHandler.SetOccupied(start, OccupancyType.BridgePort);
+                _blockTypeHandler.SetBlockType(start, BlockType.BridgePort);
                 var endPort = _bridgePortBlockPool.Spawn(end, _map.Invert(BridgeToDirection(bridgeData.bridgeDirection)));
                 _spawnedPorts.Add(end, endPort);
-                _occupancyHandler.SetOccupied(end, OccupancyType.BridgePort);
+                _blockTypeHandler.SetBlockType(end, BlockType.BridgePort);
 
                 if (bridgeData.bridgeDirection == BridgeDirection.UpVertical)
                 {
-                    _occupancyHandler.SetOccupied(start + Vector3Int.down, OccupancyType.BridgeAccept);
-                    _occupancyHandler.SetOccupied(start + Vector3Int.left, OccupancyType.BridgeReject);
-                    _occupancyHandler.SetOccupied(start + Vector3Int.right, OccupancyType.BridgeReject);
-                    _occupancyHandler.SetOccupied(start + Vector3Int.up, OccupancyType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(start + Vector3Int.down, BlockType.BridgeAccept);
+                    _blockTypeHandler.SetBlockType(start + Vector3Int.left, BlockType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(start + Vector3Int.right, BlockType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(start + Vector3Int.up, BlockType.BridgeReject);
 
-                    _occupancyHandler.SetOccupied(end + Vector3Int.up, OccupancyType.BridgeAccept);
-                    _occupancyHandler.SetOccupied(end + Vector3Int.left, OccupancyType.BridgeReject);
-                    _occupancyHandler.SetOccupied(end + Vector3Int.right, OccupancyType.BridgeReject);
-                    _occupancyHandler.SetOccupied(start + Vector3Int.down, OccupancyType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(end + Vector3Int.up, BlockType.BridgeAccept);
+                    _blockTypeHandler.SetBlockType(end + Vector3Int.left, BlockType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(end + Vector3Int.right, BlockType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(end + Vector3Int.down, BlockType.BridgeReject);
                 }
                 else if (bridgeData.bridgeDirection == BridgeDirection.RightHorizontal)
                 {
-                    _occupancyHandler.SetOccupied(start + Vector3Int.left, OccupancyType.BridgeAccept);
-                    _occupancyHandler.SetOccupied(start + Vector3Int.up, OccupancyType.BridgeReject);
-                    _occupancyHandler.SetOccupied(start + Vector3Int.down, OccupancyType.BridgeReject);
-                    _occupancyHandler.SetOccupied(start + Vector3Int.right, OccupancyType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(start + Vector3Int.left, BlockType.BridgeAccept);
+                    _blockTypeHandler.SetBlockType(start + Vector3Int.up, BlockType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(start + Vector3Int.down, BlockType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(start + Vector3Int.right, BlockType.BridgeReject);
 
-                    _occupancyHandler.SetOccupied(end + Vector3Int.right, OccupancyType.BridgeAccept);
-                    _occupancyHandler.SetOccupied(end + Vector3Int.up, OccupancyType.BridgeReject);
-                    _occupancyHandler.SetOccupied(end + Vector3Int.left, OccupancyType.BridgeReject);
-                    _occupancyHandler.SetOccupied(start + Vector3Int.right, OccupancyType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(end + Vector3Int.right, BlockType.BridgeAccept);
+                    _blockTypeHandler.SetBlockType(end + Vector3Int.up, BlockType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(end + Vector3Int.down, BlockType.BridgeReject);
+                    _blockTypeHandler.SetBlockType(end + Vector3Int.left, BlockType.BridgeReject);
                 }
 
                 for (int i = 0; i < betweens.Count; i++)
                 {
                     var platform = _bridgePlatformBlockPool.Spawn(betweens[i]);
                     if (!_spawnedPlatforms.ContainsKey(betweens[i])) _spawnedPlatforms.Add(betweens[i], platform);
-                    _occupancyHandler.SetOccupied(betweens[i], OccupancyType.BridgePlatform);
+                    _blockTypeHandler.SetBlockType(betweens[i], BlockType.BridgePlatform);
                 }
 
             }
@@ -181,12 +192,12 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
 
         public void Initialize()
         {
-            GenerateBridges();
+            
         }
 
         public void StartSystem()
         {
-
+            GenerateBridges();
         }
 
         public void StopSystem()
@@ -197,16 +208,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         public void ClearSystem()
         {
             ClearBridges();
-        }
-
-        public void BeforeSnakeMove(Vector3Int currentPosition, Vector3Int targetPosition)
-        {
-
-        }
-
-        public void AfterSnakeMove(Vector3Int previousPosition, Vector3Int currentPosition)
-        {
-
         }
     }
 }

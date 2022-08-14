@@ -6,7 +6,10 @@ using UnityEngine;
 
 namespace Challenges._2._ModifiedSnake.Scripts.Systems
 {
-    public class SnakeBodyController : ISnakeBodyController, IGameSystem
+    /// <summary>
+    /// Snake body length does not include the snake head.
+    /// </summary>
+    public class SnakeBodyController : ISnakeBodyController, IGameSystem, ISnakeMovementListener
     {
         private readonly IOccupancyHandler _occupancyHandler;
         private readonly SnakeGameData _snakeGameData;
@@ -34,10 +37,43 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             for (int i = 0; i < _snakeGameData.startLength; i++)
             {
                 var position = _map.GetNextCoordinate(previousBlock.Coordinate, Direction.Down);
+                //var rotation = previousBlock.GetTargetRotationActivity();
                 var block = _snakeBlockPool.Spawn(position);
                 _spawnedBlocks.Add(block);
+                //block.SetTargetRotationActivity(rotation);
                 previousBlock.SetBehindBlock(block);
                 previousBlock = block;
+            }
+        }
+
+        public void ShiftSnakeData()
+        {
+            for (int i = 0; i < _spawnedBlocks.Count; i++)
+            {
+                var currentBlock = _spawnedBlocks[i];
+
+                if (i == 0)
+                {
+                    var child = _snakeHeadBlock.transform.GetChild(0);
+
+                    currentBlock.SetChildPosPrev(currentBlock.ChildPosCurrent);
+                    currentBlock.SetChildPosCurrent(child.localPosition);
+
+                    currentBlock.SetChildRotPrev(currentBlock.ChildRotCurrent);
+                    currentBlock.SetChildRotCurrent(child.localRotation);
+                }
+                else
+                {
+                    var earlierBlock = _spawnedBlocks[i - 1];
+
+                    currentBlock.SetChildPosPrev(currentBlock.ChildPosCurrent);
+                    currentBlock.SetChildPosCurrent(earlierBlock.ChildPosPrev);
+
+                    currentBlock.SetChildRotPrev(currentBlock.ChildRotCurrent);
+                    currentBlock.SetChildRotCurrent(earlierBlock.ChildRotPrev);
+                }
+
+                currentBlock.ApplyShiftings();
             }
         }
         
@@ -76,5 +112,18 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             ClearSnake();
             _snakeHeadBlock.transform.position = Vector3.down * -50;
         }
+
+        public void BeforeSnakeMove(Vector3Int currentPosition, Vector3Int targetPosition)
+        {
+
+        }
+
+        public void AfterSnakeMove(Vector3Int previousPosition, Vector3Int currentPosition)
+        {
+            ShiftSnakeData();
+        }
+
+        public List<SnakeBlock> GetSpawnedBlocks() => _spawnedBlocks;
+
     }
 }

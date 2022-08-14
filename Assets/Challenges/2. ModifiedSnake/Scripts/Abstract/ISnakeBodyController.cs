@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Challenges._2._ModifiedSnake.Scripts.Blocks;
+
 namespace Challenges._2._ModifiedSnake.Scripts.Abstract
 {
     /// <summary>
@@ -6,5 +9,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Abstract
     public interface ISnakeBodyController
     {
         void AddBlock();
+
+        List<SnakeBlock> GetSpawnedBlocks();
     }
 }

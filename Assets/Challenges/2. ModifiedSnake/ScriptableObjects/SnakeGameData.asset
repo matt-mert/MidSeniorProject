@@ -16,6 +16,7 @@ MonoBehaviour:
   secondsPerTile: 0.25
   startPosition: {x: 10, y: 10, z: 0}
   startLength: 3
+  maxSimultaneousFoods: 3
   foodSpawnInterval: {x: 1, y: 3}
   bridgesData:
   - {fileID: 11400000, guid: 76c02b342c3a57642903f7d4d7f91b24, type: 2}

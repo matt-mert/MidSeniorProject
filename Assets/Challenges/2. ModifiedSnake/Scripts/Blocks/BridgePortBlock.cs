@@ -20,7 +20,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
             protected override void OnDespawned(BridgePortBlock item)
             {
                 base.OnDespawned(item);
-                item._occupancyHandler.ClearOccupancy(item._position);
+                item._blockTypeHandler.ClearBlockType(item._position);
             }
 
             protected override void Reinitialize(Vector3Int p1, Direction p2, BridgePortBlock item)
@@ -29,32 +29,36 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
                 item._position = p1;
                 item._direction = p2;
                 item.transform.position = item._map.ToWorldPosition(p1);
-                item._occupancyHandler.SetOccupied(item._position, OccupancyType.BridgePort);
+                item._blockTypeHandler.SetBlockType(item._position, BlockType.BridgePort);
                 switch (p2)
                 {
                     case Direction.Up:
                         item.transform.rotation = Quaternion.identity;
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.down, OccupancyType.BridgeAccept);
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.left, OccupancyType.BridgeReject);
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.right, OccupancyType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.down, BlockType.BridgeAccept);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.left, BlockType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.right, BlockType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.up, BlockType.BridgeReject);
                         break;
                     case Direction.Right:
                         item.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.down, OccupancyType.BridgeAccept);
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.left, OccupancyType.BridgeReject);
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.right, OccupancyType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.left, BlockType.BridgeAccept);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.up, BlockType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.down, BlockType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.right, BlockType.BridgeReject);
                         break;
                     case Direction.Down:
                         item.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.down, OccupancyType.BridgeAccept);
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.left, OccupancyType.BridgeReject);
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.right, OccupancyType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.up, BlockType.BridgeAccept);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.left, BlockType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.right, BlockType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.down, BlockType.BridgeReject);
                         break;
                     case Direction.Left:
                         item.transform.rotation = Quaternion.Euler(new Vector3(0, 270, 0));
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.down, OccupancyType.BridgeAccept);
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.left, OccupancyType.BridgeReject);
-                        item._occupancyHandler.SetOccupied(item.Position + Vector3Int.right, OccupancyType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.right, BlockType.BridgeAccept);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.up, BlockType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.down, BlockType.BridgeReject);
+                        item._blockTypeHandler.SetBlockType(item.Position + Vector3Int.left, BlockType.BridgeReject);
                         break;
                     default:
                         break;
@@ -63,7 +67,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
         }
 
         [Inject]
-        protected readonly IOccupancyHandler _occupancyHandler;
+        protected readonly IBlockTypeHandler _blockTypeHandler;
         [Inject]
         protected readonly IMap _map;
         protected Vector3Int _position;

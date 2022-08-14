@@ -27,6 +27,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
                 base.Reinitialize(p1, item);
                 item._coordinate = p1;
                 item.transform.position = new Vector3(item._coordinate.x, 0.5f, item._coordinate.y);
+                item.transform.rotation = Quaternion.identity;
                 item.OccupancyHandler.SetOccupied(item._coordinate,OccupancyType.SnakeBlock);
             }
         }
@@ -39,25 +40,22 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
         protected readonly SnakeGameData SnakeGameData;
         protected SnakeBlock BehindBlock;
         protected Vector3Int _coordinate;
-
         public Vector3Int Coordinate => _coordinate;
         public Direction LastMovementDirection { get; protected set; }
 
-        public void SetBehindBlock(SnakeBlock snakeBlock)
-        {
-            BehindBlock = snakeBlock;
-        }
+        public Vector3 ChildPosCurrent { get; protected set; }
+        public Quaternion ChildRotCurrent { get; protected set; }
+        public Vector3 ChildPosPrev { get; protected set; }
+        public Quaternion ChildRotPrev { get; protected set; }
 
-        // Added rotation as well.
+
         public void Move(Vector3Int targetCoordinate)
         {
             var prevCoordinate = _coordinate;
-            var prevRotation = transform.rotation;
             SetPosition(targetCoordinate);
             if (BehindBlock != null)
             {
                 BehindBlock.Move(prevCoordinate);
-                BehindBlock.transform.rotation = prevRotation;
             }
         }
 
@@ -66,11 +64,30 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
             var previousPosition = _coordinate;
             OccupancyHandler.ClearOccupancy(_coordinate);
             _coordinate = targetCoordinate;
-            //transform.position = new Vector3(_coordinate.x, 0.5f, _coordinate.y);
             transform.position = Map.ToWorldPosition(targetCoordinate);
             OccupancyHandler.SetOccupied(_coordinate, OccupancyType.SnakeBlock);
             var direction = Map.VectorToDirection(_coordinate - previousPosition);
             LastMovementDirection = direction == Direction.None ? Direction.Right : direction;
+        }
+
+        public virtual void ApplyShiftings()
+        {
+            var child = transform.GetChild(0);
+
+            child.transform.localPosition = ChildPosCurrent;
+            child.transform.localRotation = ChildRotCurrent;
+        }
+
+        public void SetChildPosition(Vector3 position)
+        {
+            var child = transform.GetChild(0);
+            child.localPosition = position;
+        }
+
+        public void SetChildRotation(Quaternion rotation)
+        {
+            var child = transform.GetChild(0);
+            child.localRotation = rotation;
         }
 
         public bool HasBehindBlock()
@@ -80,5 +97,29 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
 
         public SnakeBlock GetBehindBlock() => BehindBlock;
 
+        public void SetBehindBlock(SnakeBlock snakeBlock)
+        {
+            BehindBlock = snakeBlock;
+        }
+
+        public void SetChildPosCurrent(Vector3 position)
+        {
+            ChildPosCurrent = position;
+        }
+
+        public void SetChildRotCurrent(Quaternion rotation)
+        {
+            ChildRotCurrent = rotation;
+        }
+
+        public void SetChildPosPrev(Vector3 position)
+        {
+            ChildPosPrev = position;
+        }
+
+        public void SetChildRotPrev(Quaternion rotation)
+        {
+            ChildRotPrev = rotation;
+        }
     }
 }

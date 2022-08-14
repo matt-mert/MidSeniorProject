@@ -9,6 +9,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Data
         public float secondsPerTile;
         public Vector3Int startPosition;
         public int startLength;
+        public int maxSimultaneousFoods;
         public Vector2 foodSpawnInterval;
         public BridgeData[] bridgesData;
     }

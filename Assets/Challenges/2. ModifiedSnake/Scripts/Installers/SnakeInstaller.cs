@@ -48,6 +48,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Installers
             Container.BindInterfacesTo<GameStateHandler>().AsSingle().NonLazy();
 
             Container.BindInterfacesTo<BridgeGenerator>().AsSingle().NonLazy();
+            Container.BindInterfacesTo<BlockTypeHandler>().AsSingle().NonLazy();
             #endregion
 
             #region Utility

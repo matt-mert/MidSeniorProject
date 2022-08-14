@@ -20,7 +20,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
             protected override void OnDespawned(BridgePlatformBlock item)
             {
                 base.OnDespawned(item);
-                item._occupancyHandler.ClearOccupancy(item._position);
+                item._blockTypeHandler.ClearBlockType(item._position);
             }
 
             protected override void Reinitialize(Vector3Int p1, BridgePlatformBlock item)
@@ -28,12 +28,12 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
                 base.Reinitialize(p1, item);
                 item._position = p1;
                 item.transform.position = item._map.ToWorldPosition(p1);
-                item._occupancyHandler.SetOccupied(item._position, OccupancyType.None);
+                item._blockTypeHandler.SetBlockType(item._position, BlockType.BridgePlatform);
             }
         }
 
         [Inject]
-        protected readonly IOccupancyHandler _occupancyHandler;
+        protected readonly IBlockTypeHandler _blockTypeHandler;
         [Inject]
         protected readonly IMap _map;
         protected Vector3Int _position;

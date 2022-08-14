@@ -58,6 +58,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
 
         private void SpawnFoodIfPossible(Vector3Int randomPosition)
         {
+            if (_spawnedBlocks.Count == _snakeGameData.maxSimultaneousFoods) return;
+            
             if (_occupancyHandler.GetOccupancy(randomPosition) == OccupancyType.None)
             {
                 var block = _foodBlockPool.Spawn(randomPosition);

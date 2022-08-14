@@ -5,18 +5,16 @@ namespace Challenges._2._ModifiedSnake.Scripts.Data
         None,
         Food,
         SnakeBlock,
-        BridgePort,
-        BridgePlatform,
-        BridgeReject,
-        BridgeAccept,
-        Deadly
     }
 
-    public enum OccupancyLayer
+    public enum BlockType
     {
-        Top,
-        Ground,
-        Bottom
+        Default,
+        Deadly,
+        BridgePort,
+        BridgePlatform,
+        BridgeAccept,
+        BridgeReject
     }
     
     public enum Direction
