@@ -55,7 +55,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
 
             if (!_map.IsCoordinateValid(start) || !_map.IsCoordinateValid(end))
             {
-                Debug.Log("Invalid start or end coordinates for a bridge.");
+                Debug.Log("A bridge could not be spawned due to invalid start or end coordinates.");
                 return;
             }
 
@@ -78,6 +78,31 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
                 _spawnedPorts.Add(end, endPort);
                 _occupancyHandler.SetOccupied(end, OccupancyType.BridgePort);
 
+                if (bridgeData.bridgeDirection == BridgeDirection.UpVertical)
+                {
+                    _occupancyHandler.SetOccupied(start + Vector3Int.down, OccupancyType.BridgeAccept);
+                    _occupancyHandler.SetOccupied(start + Vector3Int.left, OccupancyType.BridgeReject);
+                    _occupancyHandler.SetOccupied(start + Vector3Int.right, OccupancyType.BridgeReject);
+                    _occupancyHandler.SetOccupied(start + Vector3Int.up, OccupancyType.BridgeReject);
+
+                    _occupancyHandler.SetOccupied(end + Vector3Int.up, OccupancyType.BridgeAccept);
+                    _occupancyHandler.SetOccupied(end + Vector3Int.left, OccupancyType.BridgeReject);
+                    _occupancyHandler.SetOccupied(end + Vector3Int.right, OccupancyType.BridgeReject);
+                    _occupancyHandler.SetOccupied(start + Vector3Int.down, OccupancyType.BridgeReject);
+                }
+                else if (bridgeData.bridgeDirection == BridgeDirection.RightHorizontal)
+                {
+                    _occupancyHandler.SetOccupied(start + Vector3Int.left, OccupancyType.BridgeAccept);
+                    _occupancyHandler.SetOccupied(start + Vector3Int.up, OccupancyType.BridgeReject);
+                    _occupancyHandler.SetOccupied(start + Vector3Int.down, OccupancyType.BridgeReject);
+                    _occupancyHandler.SetOccupied(start + Vector3Int.right, OccupancyType.BridgeReject);
+
+                    _occupancyHandler.SetOccupied(end + Vector3Int.right, OccupancyType.BridgeAccept);
+                    _occupancyHandler.SetOccupied(end + Vector3Int.up, OccupancyType.BridgeReject);
+                    _occupancyHandler.SetOccupied(end + Vector3Int.left, OccupancyType.BridgeReject);
+                    _occupancyHandler.SetOccupied(start + Vector3Int.right, OccupancyType.BridgeReject);
+                }
+
                 for (int i = 0; i < betweens.Count; i++)
                 {
                     var platform = _bridgePlatformBlockPool.Spawn(betweens[i]);
@@ -88,7 +113,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
             else
             {
-                Debug.Log("A bridge could not be spawned due to overlaps.");
+                Debug.Log("A bridge could not be spawned due to initial overlaps.");
                 return;
             }
         }

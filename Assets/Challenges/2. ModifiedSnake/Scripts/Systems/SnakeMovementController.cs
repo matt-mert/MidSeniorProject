@@ -51,35 +51,35 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
         }
 
-        private bool CanMoveTo(Vector3Int previous, Vector3Int current)
+        private bool CanMoveTo(Vector3Int current, Vector3Int next)
         {
-            bool occupiedWithSnake = _occupancyHandler.IsOccupiedWith(current, OccupancyType.SnakeBlock);
-            bool occupiedWithDeadly = _occupancyHandler.IsOccupiedWith(current, OccupancyType.Deadly);
-            bool failedToEnterBridge = (_occupancyHandler.IsOccupiedWith(previous, OccupancyType.BridgeReject))
-                && (_occupancyHandler.IsOccupiedWith(current, OccupancyType.BridgePort));
+            bool occupiedWithSnake = _occupancyHandler.IsOccupiedWith(next, OccupancyType.SnakeBlock);
+            bool occupiedWithDeadly = _occupancyHandler.IsOccupiedWith(next, OccupancyType.Deadly);
+            bool failedToEnterBridge = (_occupancyHandler.IsOccupiedWith(current, OccupancyType.BridgeReject))
+                && (_occupancyHandler.IsOccupiedWith(next, OccupancyType.BridgePort));
             if (occupiedWithSnake || occupiedWithDeadly || failedToEnterBridge) return false;
             else return true;
         }
 
         private void RealizeMovement()
         {
-            var previousPosition = _snakeHeadBlock.Coordinate;
-            var currentPosition = _map.GetNextCoordinate(_snakeHeadBlock.Coordinate, _currentDirection);
-            if (CanMoveTo(previousPosition, currentPosition))
+            var currentPosition = _snakeHeadBlock.Coordinate;
+            var nextPosition = _map.GetNextCoordinate(_snakeHeadBlock.Coordinate, _currentDirection);
+            if (CanMoveTo(currentPosition, nextPosition))
             {
                 foreach (var snakeMovementListener in _snakeMovementListeners)
                 {
-                    snakeMovementListener.BeforeSnakeMove(previousPosition, currentPosition);
+                    snakeMovementListener.BeforeSnakeMove(currentPosition, nextPosition);
                 }
 
-                if (_occupancyHandler.IsOccupiedWith(previousPosition, OccupancyType.BridgeAccept) &&
-                    _occupancyHandler.IsOccupiedWith(currentPosition, OccupancyType.BridgePort))
+                if (_occupancyHandler.IsOccupiedWith(currentPosition, OccupancyType.BridgeAccept) &&
+                    _occupancyHandler.IsOccupiedWith(nextPosition, OccupancyType.BridgePort))
                 {
                     RotateInDirection(_currentDirection);
                 }
 
-                if (_occupancyHandler.IsOccupiedWith(previousPosition, OccupancyType.BridgePort) &&
-                    _occupancyHandler.IsOccupiedWith(currentPosition, OccupancyType.BridgePlatform))
+                if (_occupancyHandler.IsOccupiedWith(currentPosition, OccupancyType.BridgePort) &&
+                    _occupancyHandler.IsOccupiedWith(nextPosition, OccupancyType.BridgePlatform))
                 {
                     RotateInDirection(_currentDirection);
                 }
@@ -88,7 +88,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
 
                 foreach (var snakeMovementListener in _snakeMovementListeners)
                 {
-                    snakeMovementListener.AfterSnakeMove(previousPosition, currentPosition);
+                    snakeMovementListener.AfterSnakeMove(currentPosition, nextPosition);
                 }
             }
             else
