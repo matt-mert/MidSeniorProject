@@ -22,7 +22,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         private CancellationTokenSource _src;
         //private bool _loopActive = false;
         private Direction _currentDirection;
-        private int serialCounter;
+        private Vector3Int _previousPosition;
 
         public SnakeMovementController(SnakeGameData snakeGameData, IMap map, IOccupancyHandler occupancyHandler, IBlockTypeHandler blockTypeHandler,
             IGameStateHandler gameStateHandler, SnakeHeadBlock snakeHeadBlock, ISnakeMovementListener[] snakeMovementListeners, ISnakeBodyController snakeBodyController)
@@ -43,7 +43,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
                 .SuppressCancellationThrow()) return;
             bool isCancelled = false;
             float builtUpTime = 0f;
-            serialCounter = 0;
             while (!isCancelled)
             {
                 builtUpTime += Time.deltaTime;
@@ -71,6 +70,22 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         {
             var currentPosition = _snakeHeadBlock.Coordinate;
             var nextPosition = _map.GetNextCoordinate(_snakeHeadBlock.Coordinate, _currentDirection);
+
+            bool acceptToPort = _blockTypeHandler.IsOfBlockType(currentPosition, BlockType.BridgeAccept) &&
+                _blockTypeHandler.IsOfBlockType(nextPosition, BlockType.BridgePort);
+
+            bool portToAccept = _blockTypeHandler.IsOfBlockType(currentPosition, BlockType.BridgePort) &&
+                _blockTypeHandler.IsOfBlockType(nextPosition, BlockType.BridgeAccept);
+
+            bool portToPlatform = _blockTypeHandler.IsOfBlockType(_previousPosition, BlockType.BridgeAccept) &&
+                _blockTypeHandler.IsOfBlockType(currentPosition, BlockType.BridgePort);
+
+            bool platformToPort = _blockTypeHandler.IsOfBlockType(currentPosition, BlockType.BridgePlatform) &&
+                _blockTypeHandler.IsOfBlockType(nextPosition, BlockType.BridgePort);
+
+            if (portToPlatform) nextPosition += Vector3Int.forward;
+            else if (platformToPort) nextPosition += Vector3Int.back;
+
             if (CanMoveTo(currentPosition, nextPosition))
             {
                 foreach (var snakeMovementListener in _snakeMovementListeners)
@@ -78,43 +93,28 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
                     snakeMovementListener.BeforeSnakeMove(currentPosition, nextPosition);
                 }
 
-                bool acceptToPort = _blockTypeHandler.IsOfBlockType(currentPosition, BlockType.BridgeAccept) &&
-                    _blockTypeHandler.IsOfBlockType(nextPosition, BlockType.BridgePort);
-                bool portToPlatform = _blockTypeHandler.IsOfBlockType(currentPosition, BlockType.BridgePort) &&
-                    _blockTypeHandler.IsOfBlockType(nextPosition, BlockType.BridgePlatform);
-                bool platformToPort = _blockTypeHandler.IsOfBlockType(currentPosition, BlockType.BridgePlatform) &&
-                    _blockTypeHandler.IsOfBlockType(nextPosition, BlockType.BridgePort);
-                bool portToAccept = _blockTypeHandler.IsOfBlockType(currentPosition, BlockType.BridgePort) &&
-                    _blockTypeHandler.IsOfBlockType(nextPosition, BlockType.BridgeAccept);
-
                 if (acceptToPort)
                 {
-                    _snakeHeadBlock.RotateUpInDirection(_currentDirection);
-                    //_snakeHeadBlock.SetTargetRotationActivity(Direction.Up);
+                    _snakeHeadBlock.RotateInDirection(_currentDirection);
                 }
                 else if (portToPlatform)
                 {
-                    _snakeHeadBlock.RotateDownInDirection(_currentDirection);
-                    //_snakeHeadBlock.SetTargetRotationActivity(Direction.Down);
+                    _snakeHeadBlock.ResetRotation();
                 }
                 else if (platformToPort)
                 {
-                    _snakeHeadBlock.RotateDownInDirection(_currentDirection);
-                    //_snakeHeadBlock.SetTargetRotationActivity(Direction.Down);
+                    _snakeHeadBlock.RotateInDirection(_map.Invert(_currentDirection));
                 }
                 else if (portToAccept)
                 {
-                    _snakeHeadBlock.RotateUpInDirection(_currentDirection);
-                    //_snakeHeadBlock.SetTargetRotationActivity(Direction.Up);
+                    _snakeHeadBlock.ResetRotation();
                 }
-                //else
-                //{
-                //    _snakeHeadBlock.SetTargetRotationActivity(Direction.None);
-                //}
-
-                //_snakeHeadBlock.Rotate(_currentDirection);
 
                 _snakeHeadBlock.Move(nextPosition);
+
+                _previousPosition = currentPosition;
+                currentPosition = _snakeHeadBlock.Coordinate;
+                nextPosition = _map.GetNextCoordinate(_snakeHeadBlock.Coordinate, _currentDirection);
 
                 foreach (var snakeMovementListener in _snakeMovementListeners)
                 {
@@ -142,11 +142,19 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         public void ClearSystem()
         {
             _currentDirection = Direction.Up;
+            _previousPosition = _snakeGameData.startPosition - _map.DirectionToVector(_currentDirection);
         }
 
         public bool SetActiveDirection(Direction direction)
         {
-            if (_snakeHeadBlock.Coordinate.z > 0) return false;
+            var currentPosition = _snakeHeadBlock.Coordinate;
+            var nextPosition = _map.GetNextCoordinate(currentPosition, direction);
+            bool onBridgePort = _blockTypeHandler.IsOfBlockType(currentPosition, BlockType.BridgePort);
+            bool onBridgePlatform = _blockTypeHandler.IsOfBlockType(currentPosition, BlockType.BridgePlatform);
+            bool nextIsPlatform = _blockTypeHandler.IsOfBlockType(nextPosition, BlockType.BridgePlatform);
+
+            if (onBridgePort) return false;
+            if (onBridgePlatform && !nextIsPlatform) return false;
 
             if (_map.Invert(direction) == _snakeHeadBlock.LastMovementDirection) return false;
 

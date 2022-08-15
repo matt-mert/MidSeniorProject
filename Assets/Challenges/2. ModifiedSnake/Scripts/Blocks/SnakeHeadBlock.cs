@@ -17,10 +17,10 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
 
         public override void ApplyShiftings()
         {
-            // Must only effect non-head snake blocks.
+            // This method must only affect non-head snake blocks.
         }
 
-        public void RotateUpInDirection(Direction direction)
+        public void RotateInDirection(Direction direction)
         {
             var childTransform = transform.GetChild(0);
             switch (direction)
@@ -45,28 +45,12 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
                     break;
             }
         }
-        
-        public void RotateDownInDirection(Direction direction)
+
+        public void ResetRotation()
         {
             var childTransform = transform.GetChild(0);
-            childTransform.localPosition = new Vector3(0, 0f, 0f);
-            switch (direction)
-            {
-                case Direction.Up:
-                    childTransform.localEulerAngles = new Vector3(35, 0, 0);
-                    break;
-                case Direction.Right:
-                    childTransform.localEulerAngles = new Vector3(0, 0, -35);
-                    break;
-                case Direction.Down:
-                    childTransform.localEulerAngles = new Vector3(-35, 0, 0);
-                    break;
-                case Direction.Left:
-                    childTransform.localEulerAngles = new Vector3(0, 0, 35);
-                    break;
-                default:
-                    break;
-            }
+            childTransform.localPosition = new Vector3(0, 0.184f, 0);
+            childTransform.localEulerAngles = Vector3.zero;
         }
     }
 }

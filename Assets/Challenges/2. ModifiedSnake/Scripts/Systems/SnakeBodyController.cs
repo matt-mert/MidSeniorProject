@@ -37,10 +37,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             for (int i = 0; i < _snakeGameData.startLength; i++)
             {
                 var position = _map.GetNextCoordinate(previousBlock.Coordinate, Direction.Down);
-                //var rotation = previousBlock.GetTargetRotationActivity();
                 var block = _snakeBlockPool.Spawn(position);
                 _spawnedBlocks.Add(block);
-                //block.SetTargetRotationActivity(rotation);
                 previousBlock.SetBehindBlock(block);
                 previousBlock = block;
             }

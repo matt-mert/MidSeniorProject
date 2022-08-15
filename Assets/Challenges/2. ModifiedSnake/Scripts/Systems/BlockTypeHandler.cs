@@ -15,6 +15,10 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             _map = map;
             _blockTypes = new Dictionary<Vector3Int, BlockType>();
         }
+
+        // Getter of the _blockTypes dict is mostly for debugging purposes.
+        public Dictionary<Vector3Int, BlockType> GetBlockTypesDict() => _blockTypes;
+
         public void SetBlockType(Vector3Int coordinate, BlockType type)
         {
             if (!_map.IsCoordinateValid(coordinate)) return;

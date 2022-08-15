@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Challenges._2._ModifiedSnake.Scripts.Data;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Abstract
     /// </summary>
     public interface IBlockTypeHandler
     {
+        Dictionary<Vector3Int, BlockType> GetBlockTypesDict();
         void SetBlockType(Vector3Int coordinate, BlockType type);
         void ClearBlockType(Vector3Int coordinate);
         BlockType GetBlockType(Vector3Int coordinate);

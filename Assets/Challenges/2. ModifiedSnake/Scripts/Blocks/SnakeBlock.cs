@@ -26,7 +26,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
             {
                 base.Reinitialize(p1, item);
                 item._coordinate = p1;
-                item.transform.position = new Vector3(item._coordinate.x, 0.5f, item._coordinate.y);
+                item.transform.position = new Vector3(item._coordinate.x, 0f, item._coordinate.y);
                 item.transform.rotation = Quaternion.identity;
                 item.OccupancyHandler.SetOccupied(item._coordinate,OccupancyType.SnakeBlock);
             }
@@ -74,8 +74,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Blocks
         {
             var child = transform.GetChild(0);
 
-            child.transform.localPosition = ChildPosCurrent;
-            child.transform.localRotation = ChildRotCurrent;
+            child.transform.localPosition = ChildPosPrev;
+            child.transform.localRotation = ChildRotPrev;
         }
 
         public void SetChildPosition(Vector3 position)

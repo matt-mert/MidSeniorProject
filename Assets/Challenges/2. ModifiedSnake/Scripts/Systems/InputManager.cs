@@ -6,9 +6,6 @@ using UnityEngine;
 
 namespace Challenges._2._ModifiedSnake.Scripts.Systems
 {
-    
-
-    
     public class InputManager : IInputManager, IGameSystem
     {
         private readonly IMap _map;
@@ -68,11 +65,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             }
         }
 
-        
-
-       
-
-
         public void StartController()
         {
             if (_loopActive) return;
@@ -80,9 +72,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             InputLoop(_src.Token);
             _loopActive = true;
         }
-
-        
-
         
         public void StopController()
         {
@@ -92,11 +81,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             _src = null;
             _loopActive = false;
         }
-
-        
-
-
-        
 
         public void StartSystem()
         {

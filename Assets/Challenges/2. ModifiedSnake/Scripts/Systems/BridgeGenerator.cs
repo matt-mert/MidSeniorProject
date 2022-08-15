@@ -85,9 +85,11 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
                 var entryPort = _bridgePortBlockPool.Spawn(start, BridgeToDirection(bridgeData.bridgeDirection));
                 _spawnedPorts.Add(start, entryPort);
                 _blockTypeHandler.SetBlockType(start, BlockType.BridgePort);
+                _blockTypeHandler.SetBlockType(start + Vector3Int.forward, BlockType.BridgePort);
                 var endPort = _bridgePortBlockPool.Spawn(end, _map.Invert(BridgeToDirection(bridgeData.bridgeDirection)));
                 _spawnedPorts.Add(end, endPort);
                 _blockTypeHandler.SetBlockType(end, BlockType.BridgePort);
+                _blockTypeHandler.SetBlockType(end + Vector3Int.forward, BlockType.BridgePort);
 
                 if (bridgeData.bridgeDirection == BridgeDirection.UpVertical)
                 {
@@ -116,11 +118,14 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
 
                 for (int i = 0; i < betweens.Count; i++)
                 {
-                    var platform = _bridgePlatformBlockPool.Spawn(betweens[i]);
-                    if (!_spawnedPlatforms.ContainsKey(betweens[i])) _spawnedPlatforms.Add(betweens[i], platform);
-                    _blockTypeHandler.SetBlockType(betweens[i], BlockType.BridgePlatform);
+                    if (!_spawnedPlatforms.ContainsKey(betweens[i]))
+                    {
+                        var platform = _bridgePlatformBlockPool.Spawn(betweens[i]);
+                        _spawnedPlatforms.Add(betweens[i], platform);
+                        _blockTypeHandler.SetBlockType(betweens[i], BlockType.BridgePlatform);
+                        _occupancyHandler.SetOccupied(betweens[i], OccupancyType.None);
+                    }
                 }
-
             }
             else
             {

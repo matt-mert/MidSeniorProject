@@ -90,7 +90,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             var worldHalfX = (MapSize.x + 1f) / 2f;
             var worldHalfY = (MapSize.y + 1f) / 2f;
             float yValue = coordinate.z * 0.7f;
-            // About the magic number 0.7 : Determined height of the bridge platforms.
+            // About the magic number 0.7: Determined height of the bridge platforms.
+            // About the magic number 0.184: Determined half height of snake blocks.
 
             return new Vector3(coordinate.x-worldHalfX+1, yValue, coordinate.y-worldHalfY+1);
         }
@@ -103,7 +104,6 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             newPosition.y = newPosition.y < 0 ? newPosition.y + _snakeGameData.mapSize.y : newPosition.y;
             newPosition.x = newPosition.x % _snakeGameData.mapSize.x;
             newPosition.y = newPosition.y % _snakeGameData.mapSize.y;
-            newPosition.z = 0;
             return newPosition;
         }
     }
