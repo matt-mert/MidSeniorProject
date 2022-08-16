@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: SnakeGameData
   m_EditorClassIdentifier: 
   mapSize: {x: 11, y: 11, z: 2}
-  secondsPerTile: 0.4
-  startPosition: {x: 10, y: 10, z: 0}
+  secondsPerTile: 0.25
+  startPosition: {x: 0, y: 4, z: 0}
   startLength: 3
   maxSimultaneousFoods: 3
   foodSpawnInterval: {x: 1, y: 3}
