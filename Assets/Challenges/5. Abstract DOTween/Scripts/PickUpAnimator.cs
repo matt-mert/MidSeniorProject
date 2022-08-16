@@ -51,25 +51,24 @@ namespace Challenges._6._Abstract_DOTween.Scripts
                         switch (actionType)
                         {
                             case Actions.MoveObject:
-                                foreach (var obj in objs) sequence.Append(obj.DOMove(direction, duration, snapping).SetEase(easeType));
-                                break;
+                                foreach (var obj in objs) sequence.Append(obj.DOLocalMove(direction, duration, snapping).SetEase(easeType));
+                                continue;
                             case Actions.ScaleObject:
                                 foreach (var obj in objs) sequence.Append(obj.DOScale(direction, duration).SetEase(easeType));
-                                break;
+                                continue;
                             default:
                                 throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
                         }
-                        continue;
                     }
 
                     switch (actionType)
                     {
                         case Actions.MoveObject:
-                            foreach (var obj in objs) sequence.Join(obj.DOMove(direction, duration, snapping).SetEase(easeType));
-                            break;
+                            foreach (var obj in objs) sequence.Join(obj.DOLocalMove(direction, duration, snapping).SetEase(easeType));
+                            continue;
                         case Actions.ScaleObject:
                             foreach (var obj in objs) sequence.Join(obj.DOScale(direction, duration).SetEase(easeType));
-                            break;
+                            continue;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
                     }
