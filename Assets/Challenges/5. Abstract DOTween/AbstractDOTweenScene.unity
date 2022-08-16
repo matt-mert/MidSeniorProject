@@ -739,6 +739,7 @@ MonoBehaviour:
   floorPad: {fileID: 751122092}
   centerObject: {fileID: 407481616}
   centerObjectShade: {fileID: 709422607}
+  actionSequence: []
 --- !u!4 &599704561
 Transform:
   m_ObjectHideFlags: 0
@@ -1206,6 +1207,7 @@ MonoBehaviour:
   floorPad: {fileID: 1185281779}
   centerObject: {fileID: 1796708751}
   centerObjectShade: {fileID: 423314529}
+  actionSequence: []
 --- !u!4 &1499153120
 Transform:
   m_ObjectHideFlags: 0
@@ -1499,6 +1501,7 @@ MonoBehaviour:
   floorPad: {fileID: 389675923}
   centerObject: {fileID: 486971274}
   centerObjectShade: {fileID: 1720410362}
+  actionSequence: []
 --- !u!4 &1827336952
 Transform:
   m_ObjectHideFlags: 0
@@ -1566,6 +1569,39 @@ MonoBehaviour:
   floorPad: {fileID: 2111205185}
   centerObject: {fileID: 1634444947}
   centerObjectShade: {fileID: 927757299}
+  actionSequence:
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 0
+      animatedObjects:
+      - {fileID: 1634444947}
+      - {fileID: 927757299}
+      actionEaseType: 0
+      isSnapping: 0
+      actionDirection: {x: 0, y: 2, z: 0}
+      actionDuration: 0.15
+    - actionType: 1
+      animatedObjects: []
+      actionEaseType: 0
+      isSnapping: 0
+      actionDirection: {x: 1.5, y: 1.5, z: 1.5}
+      actionDuration: 0.15
+    delayAfterSet: 0.05
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 0
+      animatedObjects: []
+      actionEaseType: 0
+      isSnapping: 0
+      actionDirection: {x: 0, y: 0, z: 0}
+      actionDuration: 0
+    - actionType: 0
+      animatedObjects: []
+      actionEaseType: 0
+      isSnapping: 0
+      actionDirection: {x: 0, y: 0, z: 0}
+      actionDuration: 0
+    delayAfterSet: 0
 --- !u!1 &2111205184
 GameObject:
   m_ObjectHideFlags: 0
