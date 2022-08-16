@@ -362,7 +362,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 395025682}
   m_LocalRotation: {x: 0.13903752, y: 0.69330263, z: -0.13903755, w: 0.69330263}
-  m_LocalPosition: {x: -7.31, y: 4.54, z: -0}
+  m_LocalPosition: {x: -7.41, y: 4.54, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -739,7 +739,106 @@ MonoBehaviour:
   floorPad: {fileID: 751122092}
   centerObject: {fileID: 407481616}
   centerObjectShade: {fileID: 709422607}
-  actionSequence: []
+  actionSequence:
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 407481616}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0.8, y: 0.8, z: 0.8}
+      actionDuration: 0.12
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 709422607}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0.88, y: 0.88, z: 0.88}
+      actionDuration: 0.12
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 407481616}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0.25, y: 0.25, z: 0.25}
+      actionDuration: 0.06
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 709422607}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 5, y: 5, z: 5}
+      actionDuration: 0.06
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 751122092}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.2, z: 1.6}
+      actionDuration: 0.06
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 407481616}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0, y: 0, z: 0}
+      actionDuration: 0.06
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 709422607}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 10, y: 10, z: 10}
+      actionDuration: 0.06
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 751122092}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.1, z: 1.6}
+      actionDuration: 0.06
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 407481616}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0, y: 0, z: 0}
+      actionDuration: 0.06
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 709422607}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 10, y: 10, z: 10}
+      actionDuration: 0.06
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 751122092}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.14, z: 1.6}
+      actionDuration: 0.06
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 751122092}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.06, z: 1.6}
+      actionDuration: 0.06
+    delayAfterSet: 0
 --- !u!4 &599704561
 Transform:
   m_ObjectHideFlags: 0
@@ -1207,7 +1306,95 @@ MonoBehaviour:
   floorPad: {fileID: 1185281779}
   centerObject: {fileID: 1796708751}
   centerObjectShade: {fileID: 423314529}
-  actionSequence: []
+  actionSequence:
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 1796708751}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0.935, y: 0.935, z: 0.935}
+      actionDuration: 0.15
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 423314529}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 1.0736684, y: 1.073668, z: 1.073668}
+      actionDuration: 0.15
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 1796708751}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0, y: 0, z: 0}
+      actionDuration: 0.15
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 423314529}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0.001, y: 0.001, z: 0.001}
+      actionDuration: 0.15
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 423314529}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 5, y: 5, z: 5}
+      actionDuration: 0.1
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 1185281779}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 2, y: 0.06, z: 2}
+      actionDuration: 0.1
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 423314529}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 10, y: 10, z: 10}
+      actionDuration: 0.1
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 1185281779}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.06, z: 1.6}
+      actionDuration: 0.1
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 1185281779}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.8, y: 0.06, z: 1.8}
+      actionDuration: 0.1
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 1185281779}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.06, z: 1.6}
+      actionDuration: 0.1
+    delayAfterSet: 0
 --- !u!4 &1499153120
 Transform:
   m_ObjectHideFlags: 0
@@ -1501,7 +1688,104 @@ MonoBehaviour:
   floorPad: {fileID: 389675923}
   centerObject: {fileID: 486971274}
   centerObjectShade: {fileID: 1720410362}
-  actionSequence: []
+  actionSequence:
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 0
+      animatedObjects:
+      - {fileID: 486971274}
+      - {fileID: 1720410362}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0, y: 0.4, z: 0}
+      actionDuration: 0.25
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 0
+      animatedObjects:
+      - {fileID: 486971274}
+      - {fileID: 1720410362}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0, y: 0.7, z: 0}
+      actionDuration: 0.15
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 0
+      animatedObjects:
+      - {fileID: 486971274}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0, y: 1, z: 0}
+      actionDuration: 0.15
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 486971274}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0, y: 0, z: 0}
+      actionDuration: 0.15
+    - actionType: 0
+      animatedObjects:
+      - {fileID: 1720410362}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 0, y: 1, z: 0}
+      actionDuration: 0.15
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 1720410362}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 5, y: 5, z: 5}
+      actionDuration: 0.15
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 389675923}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 2.2, y: 0.06, z: 2.2}
+      actionDuration: 0.15
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 1720410362}
+      actionEaseType: 0
+      isSnapping: 0
+      actionDirection: {x: 10, y: 10, z: 10}
+      actionDuration: 0.15
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 389675923}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.06, z: 1.6}
+      actionDuration: 0.15
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 389675923}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 2, y: 0.06, z: 2}
+      actionDuration: 0.15
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 389675923}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.06, z: 1.6}
+      actionDuration: 0.15
+    delayAfterSet: 0
 --- !u!4 &1827336952
 Transform:
   m_ObjectHideFlags: 0
@@ -1576,31 +1860,97 @@ MonoBehaviour:
       animatedObjects:
       - {fileID: 1634444947}
       - {fileID: 927757299}
-      actionEaseType: 0
+      actionEaseType: 6
       isSnapping: 0
       actionDirection: {x: 0, y: 2, z: 0}
       actionDuration: 0.15
     - actionType: 1
-      animatedObjects: []
-      actionEaseType: 0
+      animatedObjects:
+      - {fileID: 1634444947}
+      actionEaseType: 6
       isSnapping: 0
       actionDirection: {x: 1.5, y: 1.5, z: 1.5}
+      actionDuration: 0.15
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 927757299}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 1.6, z: 1.6}
       actionDuration: 0.15
     delayAfterSet: 0.05
   - delayBeforeSet: 0
     setOfActions:
     - actionType: 0
-      animatedObjects: []
+      animatedObjects:
+      - {fileID: 1634444947}
+      - {fileID: 927757299}
       actionEaseType: 0
       isSnapping: 0
       actionDirection: {x: 0, y: 0, z: 0}
-      actionDuration: 0
-    - actionType: 0
-      animatedObjects: []
+      actionDuration: 0.15
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 1634444947}
+      - {fileID: 927757299}
       actionEaseType: 0
       isSnapping: 0
       actionDirection: {x: 0, y: 0, z: 0}
-      actionDuration: 0
+      actionDuration: 0.15
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 2111205185}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.16, z: 1.6}
+      actionDuration: 0.1
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 927757299}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 5, y: 5, z: 5}
+      actionDuration: 0.1
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 2111205185}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.06, z: 1.6}
+      actionDuration: 0.1
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 927757299}
+      actionEaseType: 6
+      isSnapping: 0
+      actionDirection: {x: 10, y: 10, z: 10}
+      actionDuration: 0.1
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 2111205185}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.12, z: 1.6}
+      actionDuration: 0.1
+    delayAfterSet: 0
+  - delayBeforeSet: 0
+    setOfActions:
+    - actionType: 1
+      animatedObjects:
+      - {fileID: 2111205185}
+      actionEaseType: 31
+      isSnapping: 0
+      actionDirection: {x: 1.6, y: 0.06, z: 1.6}
+      actionDuration: 0.1
     delayAfterSet: 0
 --- !u!1 &2111205184
 GameObject:

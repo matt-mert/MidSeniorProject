@@ -14,7 +14,9 @@ namespace Challenges._6._Abstract_DOTween.Scripts
         public enum Actions
         {
             MoveObject,
-            ScaleObject
+            ScaleObject,
+            EnableObject,
+            DisableObject
         }
 
         [Header("Complete sequence of the animation")]
@@ -46,20 +48,7 @@ namespace Challenges._6._Abstract_DOTween.Scripts
                     var direction = actions[j].actionDirection;
                     var duration = actions[j].actionDuration;
 
-                    if (j == 0)
-                    {
-                        switch (actionType)
-                        {
-                            case Actions.MoveObject:
-                                foreach (var obj in objs) sequence.Append(obj.DOLocalMove(direction, duration, snapping).SetEase(easeType));
-                                continue;
-                            case Actions.ScaleObject:
-                                foreach (var obj in objs) sequence.Append(obj.DOScale(direction, duration).SetEase(easeType));
-                                continue;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
-                        }
-                    }
+                    if (objs.Count == 0) continue;
 
                     switch (actionType)
                     {
@@ -68,6 +57,12 @@ namespace Challenges._6._Abstract_DOTween.Scripts
                             continue;
                         case Actions.ScaleObject:
                             foreach (var obj in objs) sequence.Join(obj.DOScale(direction, duration).SetEase(easeType));
+                            continue;
+                        case Actions.EnableObject:
+                            foreach (var obj in objs) obj.gameObject.SetActive(true);
+                            continue;
+                        case Actions.DisableObject:
+                            foreach (var obj in objs) obj.gameObject.SetActive(false);
                             continue;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
@@ -98,7 +93,7 @@ namespace Challenges._6._Abstract_DOTween.Scripts
         [Header("(Not all properties are applicable for all actions)")]
         [Header("Choose the properties of this action")]
         public PickUpAnimator.Actions actionType;
-        public Transform[] animatedObjects;
+        public List<Transform> animatedObjects;
         public Ease actionEaseType = Ease.OutQuad;
         public bool isSnapping = false;
         public Vector3 actionDirection = Vector3.zero;
