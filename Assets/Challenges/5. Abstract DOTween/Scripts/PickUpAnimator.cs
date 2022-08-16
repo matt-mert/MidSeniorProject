@@ -6,6 +6,9 @@ namespace Challenges._6._Abstract_DOTween.Scripts
     public class PickUpAnimator : DoTweenAnimation
     {
         //Add parameters here
+
+        public float startingHeight;
+
         
         /// <summary>
         /// Fill out this function
