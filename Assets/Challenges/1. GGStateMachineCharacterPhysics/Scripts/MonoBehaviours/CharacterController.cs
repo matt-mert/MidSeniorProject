@@ -128,13 +128,13 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
         // (W and S) -> (0,0) ;
         // (A and S) -> (-1,-1) ;
         // (A) -> (-1,0)
+
         public void SetCurrentMovement(Vector2 xzPlaneMovementVector)
         {
             
         }
         
         #endregion
-        
         
         private void OnDrawGizmosSelected()
         {
