@@ -101,7 +101,6 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
         // You should only need to edit in this region, you can add any variables you wish.
         
 
-       
         //Add your states under this function
         private void SetupStateMachineStates()
         {
