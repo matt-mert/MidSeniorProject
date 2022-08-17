@@ -84,7 +84,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
 
         private void OnDestroy()
         {
-            if(Application.isPlaying)
+            if (Application.isPlaying)
                 _stateMachine.RequestExit();
         }
 
