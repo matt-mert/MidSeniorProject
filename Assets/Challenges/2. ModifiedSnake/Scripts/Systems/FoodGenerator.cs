@@ -6,7 +6,8 @@ using Challenges._2._ModifiedSnake.Scripts.Blocks;
 using Challenges._2._ModifiedSnake.Scripts.Data;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Random = UnityEngine.Random;
+using RandomCS = System.Random;
+using RandomUE = UnityEngine.Random;
 
 namespace Challenges._2._ModifiedSnake.Scripts.Systems
 {
@@ -20,18 +21,20 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         private readonly IMap _map;
         private readonly ISnakeBodyController _snakeBodyController;
         private readonly IOccupancyHandler _occupancyHandler;
+        private readonly IBlockTypeHandler _blockTypeHandler;
         private CancellationTokenSource _cts;
         private bool _running = false;
         private Dictionary<Vector3Int, FoodBlock> _spawnedBlocks;
 
         public FoodGenerator(SnakeGameData snakeGameData, ISnakeBodyController snakeBodyController, FoodBlock.FoodBlockPool foodBlockPool,
-            IMap map, IOccupancyHandler occupancyHandler)
+            IMap map, IOccupancyHandler occupancyHandler, IBlockTypeHandler blockTypeHandler)
         {
             _snakeGameData = snakeGameData;
             _snakeBodyController = snakeBodyController;
             _foodBlockPool = foodBlockPool;
             _map = map;
             _occupancyHandler = occupancyHandler;
+            _blockTypeHandler = blockTypeHandler;
             _spawnedBlocks = new Dictionary<Vector3Int, FoodBlock>();
         }
 
@@ -51,7 +54,21 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
                 var randomTime = GetRandomTime();
                 var isCancelled = await UniTask.Delay(TimeSpan.FromSeconds(randomTime),cancellationToken: _cts.Token).SuppressCancellationThrow();
                 if (isCancelled) return;
-                var randomPosition = _map.GetRandomCoordinate();
+
+                var acceptedOccupancies = new List<OccupancyType>()
+                {
+                    OccupancyType.None
+                };
+
+                var acceptedBlockTypes = new List<BlockType>()
+                {
+                    BlockType.Default,
+                    BlockType.BridgeAccept,
+                    BlockType.BridgeReject,
+                    BlockType.BridgePlatform
+                };
+
+                var randomPosition = GetRandomAvailableCoordinate(acceptedOccupancies, acceptedBlockTypes);
                 SpawnFoodIfPossible(randomPosition);
             }
         }
@@ -59,13 +76,38 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
         private void SpawnFoodIfPossible(Vector3Int randomPosition)
         {
             if (_spawnedBlocks.Count == _snakeGameData.maxSimultaneousFoods) return;
-            
-            if (_occupancyHandler.GetOccupancy(randomPosition) == OccupancyType.None)
+
+            if (_occupancyHandler.GetOccupancy(randomPosition) != OccupancyType.None) return;
+
+            if (_blockTypeHandler.GetBlockType(randomPosition) == BlockType.BridgePort) return;
+
+            if (_blockTypeHandler.GetBlockType(randomPosition) == BlockType.Deadly) return;
+
+            var block = _foodBlockPool.Spawn(randomPosition);
+            _spawnedBlocks.Add(randomPosition, block);
+            _occupancyHandler.SetOccupied(randomPosition, OccupancyType.Food);
+        }
+
+        public Vector3Int GetRandomAvailableCoordinate(List<OccupancyType> acceptedOccupancies, List<BlockType> acceptedBlocks)
+        {
+            var occupancyDict = _occupancyHandler.GetOccupancyDict();
+            var blockTypeDict = _blockTypeHandler.GetBlockTypeDict();
+            var availableCoords = new List<Vector3Int>();
+
+            foreach (KeyValuePair<Vector3Int, OccupancyType> pair in occupancyDict)
             {
-                var block = _foodBlockPool.Spawn(randomPosition);
-                _spawnedBlocks.Add(randomPosition,block);
-                _occupancyHandler.SetOccupied(randomPosition, OccupancyType.Food);
+                if (acceptedOccupancies.Contains(pair.Value)) availableCoords.Add(pair.Key);
             }
+
+            foreach (KeyValuePair<Vector3Int, BlockType> pair in blockTypeDict)
+            {
+                if (acceptedBlocks.Contains(pair.Value)) availableCoords.Add(pair.Key);
+            }
+
+            var random = new RandomCS();
+            int index = random.Next(availableCoords.Count);
+
+            return availableCoords[index];
         }
 
         private void ClearFoods()
@@ -79,7 +121,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
 
         private float GetRandomTime()
         {
-            return Random.Range(_snakeGameData.foodSpawnInterval.x, _snakeGameData.foodSpawnInterval.y);
+            return RandomUE.Range(_snakeGameData.foodSpawnInterval.x, _snakeGameData.foodSpawnInterval.y);
         }
 
         public void StopGeneration()

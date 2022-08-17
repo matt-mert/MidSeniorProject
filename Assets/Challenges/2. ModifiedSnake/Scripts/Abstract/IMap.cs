@@ -1,4 +1,5 @@
 using Challenges._2._ModifiedSnake.Scripts.Data;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Challenges._2._ModifiedSnake.Scripts.Abstract

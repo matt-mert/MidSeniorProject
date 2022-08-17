@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using Challenges._2._ModifiedSnake.Scripts.Data;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Challenges._2._ModifiedSnake.Scripts.Abstract
@@ -15,6 +15,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Abstract
         void ClearBlockType(Vector3Int coordinate);
         BlockType GetBlockType(Vector3Int coordinate);
         bool IsOfBlockType(Vector3Int coordinate, BlockType checkType);
+        Dictionary<Vector3Int, BlockType> GetBlockTypeDict();
         void ClearAllBlockAllocations();
     }
 }

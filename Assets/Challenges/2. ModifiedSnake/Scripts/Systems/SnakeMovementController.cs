@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Challenges._2._ModifiedSnake.Scripts.Abstract;
 using Challenges._2._ModifiedSnake.Scripts.Blocks;
 using Challenges._2._ModifiedSnake.Scripts.Data;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Challenges._2._ModifiedSnake.Scripts.Systems
 {

@@ -1,4 +1,5 @@
 using Challenges._2._ModifiedSnake.Scripts.Data;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Challenges._2._ModifiedSnake.Scripts.Abstract
@@ -13,6 +14,7 @@ namespace Challenges._2._ModifiedSnake.Scripts.Abstract
         void ClearOccupancy(Vector3Int coordinate);
         OccupancyType GetOccupancy(Vector3Int coordinate);
         bool IsOccupiedWith(Vector3Int coordinate, OccupancyType checkType);
+        Dictionary<Vector3Int, OccupancyType> GetOccupancyDict();
         void ClearAllOccupancies();
     }
 }

@@ -38,6 +38,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             return GetOccupancy(coordinate) == checkType;
         }
 
+        public Dictionary<Vector3Int, OccupancyType> GetOccupancyDict() => _occupancy;
+
         public void ClearAllOccupancies()
         {
             _occupancy.Clear();

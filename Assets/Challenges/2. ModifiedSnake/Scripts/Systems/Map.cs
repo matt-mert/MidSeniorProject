@@ -1,6 +1,6 @@
-﻿using System;
-using Challenges._2._ModifiedSnake.Scripts.Abstract;
+﻿using Challenges._2._ModifiedSnake.Scripts.Abstract;
 using Challenges._2._ModifiedSnake.Scripts.Data;
+using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -78,12 +78,35 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
                     throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
             }
         }
-        
+
         public Vector3Int GetRandomCoordinate()
         {
-            return new Vector3Int(Random.Range(0, _snakeGameData.mapSize.x),
-                Random.Range(0, _snakeGameData.mapSize.y), 0);
+            return new Vector3Int(Random.Range(0, _snakeGameData.mapSize.x), Random.Range(0, _snakeGameData.mapSize.y), 0);
         }
+        
+        /*
+        public Vector3Int GetRandomCoordinate(List<OccupancyType> acceptedOccupancies, List<BlockType> acceptedBlocks)
+        {
+            var occupancyDict = _occupancyHandler.GetOccupancyDict();
+            var blockTypeDict = _blockTypeHandler.GetBlockTypeDict();
+            var availableCoords = new List<Vector3Int>();
+            
+            foreach (KeyValuePair<Vector3Int, OccupancyType> pair in occupancyDict)
+            {
+                if (acceptedOccupancies.Contains(pair.Value)) availableCoords.Add(pair.Key);
+            }
+
+            foreach (KeyValuePair<Vector3Int, BlockType> pair in blockTypeDict)
+            {
+                if (acceptedBlocks.Contains(pair.Value)) availableCoords.Add(pair.Key);
+            }
+
+            var random = new Random();
+            int index = random.Next(availableCoords.Count);
+
+            return availableCoords[index];
+        }
+        */
 
         public Vector3 ToWorldPosition(Vector3Int coordinate)
         {

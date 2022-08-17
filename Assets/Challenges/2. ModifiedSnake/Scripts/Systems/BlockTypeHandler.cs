@@ -42,6 +42,8 @@ namespace Challenges._2._ModifiedSnake.Scripts.Systems
             return GetBlockType(coordinate) == checkType;
         }
 
+        public Dictionary<Vector3Int, BlockType> GetBlockTypeDict() => _blockTypes;
+
         public void ClearAllBlockAllocations()
         {
             _blockTypes.Clear();
