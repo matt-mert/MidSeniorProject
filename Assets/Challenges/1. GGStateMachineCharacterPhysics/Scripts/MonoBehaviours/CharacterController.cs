@@ -99,6 +99,11 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
         }
 
         #region EDIT
+
+        // Note: Movement can also be implemented so that character slows down when moving on
+        // an inclined ground, i.e. climbing a hill. However, the requirements document for
+        // the controller does not provide any information regarding this point.
+
         // You should only need to edit in this region, you can add any variables you wish.
 
         private Vector2 _inputVector;
@@ -111,17 +116,17 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
             _stateMachine.RegisterUniqueState(new FallingState());
         }
 
-
+        private void StateMachineController()
+        {
+            
+        }
         
         //Feel free to remove this
         private void ExampleStateSwitching()
         {
-            
-            
             _stateMachine.EnqueueState<ExampleParametrizedState,float>(1f);
             _stateMachine.EnqueueState<ExampleState>();
             // EnqueueState will queue up the states
-            
             
             _stateMachine.SwitchToState<ExampleParametrizedState,float>(1f);
             _stateMachine.SwitchToState<ExampleState>();
