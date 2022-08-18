@@ -54,6 +54,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
 
         public float CharacterRadius => characterRadius;
     }
+
     [ExecuteAlways]
     public class CharacterController : MonoBehaviour, IInputListener
     {
@@ -70,7 +71,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
         {
             _ggStateMachineFactory = ggStateMachineFactory;
         }
-        void Start()
+        private void Start()
         {
             if (!Application.isPlaying) return;
             CreateStateMachine();
@@ -99,17 +100,24 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
 
         #region EDIT
         // You should only need to edit in this region, you can add any variables you wish.
-        
+
+        private Vector2 _inputVector;
 
         //Add your states under this function
         private void SetupStateMachineStates()
         {
-            _stateMachine.RegisterUniqueState(new ExampleState()).RegisterUniqueState(new ExampleParametrizedState(5f));
+            _stateMachine.RegisterUniqueState(new ReceivingInputState());
+            _stateMachine.RegisterUniqueState(new InputStoppedState());
+            _stateMachine.RegisterUniqueState(new FallingState());
         }
+
+
         
         //Feel free to remove this
         private void ExampleStateSwitching()
         {
+            
+            
             _stateMachine.EnqueueState<ExampleParametrizedState,float>(1f);
             _stateMachine.EnqueueState<ExampleState>();
             // EnqueueState will queue up the states
@@ -130,7 +138,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
 
         public void SetCurrentMovement(Vector2 xzPlaneMovementVector)
         {
-            
+            _inputVector = xzPlaneMovementVector;
         }
         
         #endregion
@@ -149,7 +157,6 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
                 var localTargetPos = localPos + Vector3.up * characterMovementConfig.CharacterHeight;
                 Handles.DrawLine(transform.TransformPoint(localPos),transform.TransformPoint(localTargetPos));
             }
-          
         }
     }
 }
