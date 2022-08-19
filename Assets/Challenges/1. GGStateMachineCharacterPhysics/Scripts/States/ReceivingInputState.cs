@@ -26,8 +26,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
 
         public override void CleanUp()
         {
+
         }
     }
-
-
 }
