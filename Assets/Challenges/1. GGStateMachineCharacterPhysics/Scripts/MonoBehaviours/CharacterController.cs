@@ -6,6 +6,8 @@ using GGPlugins.GGStateMachine.Scripts.Installers;
 using UnityEditor;
 using UnityEngine;
 using Zenject;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -107,6 +109,11 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
         // You should only need to edit in this region, you can add any variables you wish.
 
         private Vector2 _inputVector;
+        private Vector3 currentVelocity;
+        private float _smallMargin = 0.01f;
+        private float _stepHeightLimit = 0.5f;
+
+        public Vector3 GetVelocityValue() => currentVelocity;
 
         //Add your states under this function
         private void SetupStateMachineStates()
