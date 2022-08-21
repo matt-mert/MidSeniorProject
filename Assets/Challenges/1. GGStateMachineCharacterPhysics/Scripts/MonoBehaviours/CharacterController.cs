@@ -109,25 +109,86 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
         // You should only need to edit in this region, you can add any variables you wish.
 
         private Vector2 _inputVector;
-        private Vector3 currentVelocity;
+        private Vector3 _movementVector;
         private float _smallMargin = 0.01f;
         private float _stepHeightLimit = 0.5f;
 
-        public Vector3 GetVelocityValue() => currentVelocity;
+        public Vector3 GetMovementVector() => _movementVector;
+
+        public void SetMovementVector(Vector3 velocity)
+        {
+            _movementVector = velocity;
+        }
 
         //Add your states under this function
         private void SetupStateMachineStates()
         {
-            _stateMachine.RegisterUniqueState(new ReceivingInputState());
-            _stateMachine.RegisterUniqueState(new InputStoppedState());
+            _stateMachine.RegisterUniqueState(new AcceleratingState(this, characterMovementConfig));
+            _stateMachine.RegisterUniqueState(new MovingState(this, characterMovementConfig));
+            _stateMachine.RegisterUniqueState(new DeceleratingState(this, characterMovementConfig));
             _stateMachine.RegisterUniqueState(new FallingState());
         }
 
-        private void StateMachineController()
+        private void Update()
         {
-            
+            transform.Translate(_movementVector);
         }
-        
+
+        private async UniTask StateMachineController(CancellationToken token)
+        {
+            var isCancelled = false;
+
+            if (_stateMachine == null) isCancelled = await UniTask.NextFrame(token).SuppressCancellationThrow();
+
+            while (!isCancelled)
+            {
+                var currentState = _stateMachine.GetCurrentState();
+
+                switch (currentState.Identifier)
+                {
+                    case "IdleState":
+                        if (_inputVector != Vector2.zero)
+                        {
+                            _stateMachine.SwitchToState<AcceleratingState, Vector2>(_inputVector);
+                        }
+                        continue;
+
+                    case "AcceleratingState":
+                        continue;
+
+                    case "MovingState":
+                        if (_inputVector == Vector2.zero)
+                        {
+                            _stateMachine.SwitchToState<DeceleratingState>();
+                        }
+                        continue;
+
+                    case "DeceleratingState":
+
+                        continue;
+
+                    case "FallingState":
+
+                        continue;
+
+                    default:
+                        isCancelled = await UniTask.NextFrame(token).SuppressCancellationThrow();
+                        continue;
+                }
+
+                var rayArray = new Ray[10];
+
+                for (int i = 0; i < 10; i++)
+                {
+                    var angle = Mathf.PI * 2 * ((i + 0f) / 10f);
+                    var x = Mathf.Cos(angle);
+                    var y = Mathf.Sin(angle);
+                    var direction = new Vector3(x, 0, y);
+                    rayArray[i] = new Ray(transform.position, direction);
+                }
+            }
+        }
+
         //Feel free to remove this
         private void ExampleStateSwitching()
         {
