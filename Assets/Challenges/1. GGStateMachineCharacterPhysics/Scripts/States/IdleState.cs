@@ -9,8 +9,6 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
     /// </summary>
     public class IdleState : GGStateBase
     {
-    
-
         public override void Setup()
         {
         }

@@ -25,12 +25,12 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
 
         public override async UniTask Entry(CancellationToken cancellationToken)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cancellationToken);
+            
         }
 
         public override async UniTask Exit(CancellationToken cancellationToken)
         {
-            Debug.Log("ExampleState: Exit");
+            
         }
 
         public override void CleanUp()

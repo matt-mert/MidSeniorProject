@@ -24,12 +24,20 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
 
         public override async UniTask Entry(CancellationToken cancellationToken)
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cancellationToken);
+            var movementVector = _controller.GetMovementVector();
+
+            while (movementVector.sqrMagnitude < _config.MAXSpeed * _config.MAXSpeed)
+            {
+                movementVector -= new Vector3(movementVector.x, 0f, movementVector.z) * _config.AccelerationByTime;
+                movementVector *= _config.GeneralVelocityDamping;
+
+                await UniTask.NextFrame();
+            }
         }
 
         public override async UniTask Exit(CancellationToken cancellationToken)
         {
-            Debug.Log("ExampleState: Exit");
+            
         }
 
         public override void CleanUp()
