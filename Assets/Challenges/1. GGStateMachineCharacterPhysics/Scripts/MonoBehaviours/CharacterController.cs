@@ -139,12 +139,14 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
                 _controllerStarted = true;
             }
 
-            if (_stateMachine != null) Debug.Log(_stateMachine.GetCurrentState().Identifier);
+            //if (_stateMachine != null) Debug.Log(_stateMachine.GetCurrentState().Identifier);
         }
 
         private async UniTask StateMachineController(CancellationToken token)
         {
             var isCancelled = false;
+
+            _stateMachine.SwitchToState<IdleState>();
 
             while (!isCancelled)
             {
@@ -152,13 +154,12 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
 
                 var currentState = _stateMachine.GetCurrentState();
 
-                _stateMachine.SwitchToState<AcceleratingState, Vector2>(_inputVector);
+                bool isGrounded = false;
 
                 var raycastHits = Physics.SphereCastAll(transform.position + new Vector3(0f, characterMovementConfig.CharacterHeight, 0f),
                     characterMovementConfig.CharacterRadius, Vector3.down, characterMovementConfig.CharacterHeight, LayerMask.GetMask("CharacterBlocker"));
 
-                bool isGrounded = false;
-
+                Debug.Log(currentState.Identifier);
 
                 /*
                 if (raycastHits.Length == 0) isGrounded = true;
@@ -192,8 +193,13 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
                         }
                     }
                 }
+                */
 
-                if (!isGrounded && (currentState.Identifier != "FallingState")) _stateMachine.SwitchToState<FallingState>();
+                //if (!isGrounded && (currentState.Identifier != "FallingState")) _stateMachine.SwitchToState<FallingState>();
+
+                //IdleState test = new IdleState();
+                //Type type = test.GetType();
+                //string str = type.ToString();
 
                 switch (currentState.Identifier)
                 {
@@ -205,10 +211,11 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
                         continue;
                 
                     case "AcceleratingState":
-                        //if (_movementVector.sqrMagnitude >= characterMovementConfig.MAXSpeed * characterMovementConfig.MAXSpeed)
-                        //{
-                        //    _stateMachine.SwitchToState<MovingState, Vector2>(_inputVector);
-                        //}
+                        if (_movementVector.sqrMagnitude >= characterMovementConfig.MAXSpeed * characterMovementConfig.MAXSpeed)
+                        {
+                            _stateMachine.SwitchToState<MovingState, Vector2>(_inputVector);
+                        }
+
                         if (_inputVector == Vector2.zero)
                         {
                             _stateMachine.SwitchToState<DeceleratingState>();
@@ -225,6 +232,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
                     case "DeceleratingState":
                         if (_movementVector.sqrMagnitude <= 0.01f)
                         {
+                            _movementVector = Vector3.zero;
                             _stateMachine.SwitchToState<IdleState>();
                         }
                         continue;
@@ -240,7 +248,6 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
                         isCancelled = await UniTask.NextFrame(token).SuppressCancellationThrow();
                         continue;
                 }
-                */
             }
         }
 

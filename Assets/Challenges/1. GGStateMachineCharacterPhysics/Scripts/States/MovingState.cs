@@ -30,7 +30,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
 
         public override async UniTask Exit(CancellationToken cancellationToken)
         {
-            
+            await UniTask.NextFrame();
         }
 
         public override void CleanUp()
