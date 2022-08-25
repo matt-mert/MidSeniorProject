@@ -3,11 +3,10 @@ using Challenges._1._GGStateMachineCharacterPhysics.Scripts.States;
 using GGPlugins.GGStateMachine.Scripts.Abstract;
 using GGPlugins.GGStateMachine.Scripts.Data;
 using GGPlugins.GGStateMachine.Scripts.Installers;
+using TMPro.EditorUtilities;
 using UnityEditor;
 using UnityEngine;
 using Zenject;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -107,18 +106,17 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
         // You should only need to edit in this region, you can add any variables you wish.
 
         private Vector2 _inputVector;
-        private Vector3 _movementVector;
+        private float _movementVectorX;
+        private float _movementVectorY;
+        private float _movementVectorZ;
         private float _stepHeightLimit = 0.5f;
-        private bool _controllerStarted = false;
 
-        public Vector3 GetInputVector() => _inputVector;
-
-        public Vector3 GetMovementVector() => _movementVector;
-
-        public void SetMovementVector(Vector3 velocity)
-        {
-            _movementVector = velocity;
-        }
+        public Vector2 GetInputVector() => _inputVector;
+        public Vector3 GetMovementVector() => new Vector3(_movementVectorX, _movementVectorY, _movementVectorZ);
+        public void SetMovementVectorX(float x) { _movementVectorX = x; }
+        public void SetMovementVectorY(float y) { _movementVectorY = y; }
+        public void SetMovementVectorZ(float z) { _movementVectorZ = z; }
+        public float StepHeightLimit => _stepHeightLimit;
 
         //Add your states under this function
         private void SetupStateMachineStates()
@@ -126,22 +124,26 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
             _stateMachine.RegisterUniqueState(new AcceleratingState(this, characterMovementConfig));
             _stateMachine.RegisterUniqueState(new MovingState(this, characterMovementConfig));
             _stateMachine.RegisterUniqueState(new DeceleratingState(this, characterMovementConfig));
-            _stateMachine.RegisterUniqueState(new FallingState());
+            _stateMachine.RegisterUniqueState(new FallingState(this, characterMovementConfig));
         }
 
         private void Update()
         {
-            transform.Translate(_movementVector * Time.deltaTime);
-            if (!_controllerStarted)
-            {
-                var src = new CancellationTokenSource();
-                StateMachineController(src.Token);
-                _controllerStarted = true;
-            }
+            var movementVector = new Vector3(_movementVectorX, _movementVectorY, _movementVectorZ);
+            transform.Translate(movementVector * Time.deltaTime);
 
-            //if (_stateMachine != null) Debug.Log(_stateMachine.GetCurrentState().Identifier);
+            if (_stateMachine == null) return;
+
+            var currentState = _stateMachine.GetCurrentState();
+
+            if ((_inputVector != Vector2.zero) && (currentState.Identifier == "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.IdleState"))
+            {
+                _stateMachine.SwitchToState<AcceleratingState, Transform>(transform);
+                Debug.Log("State has changed to AcceleratingState.");
+            }
         }
 
+        /*
         private async UniTask StateMachineController(CancellationToken token)
         {
             var isCancelled = false;
@@ -150,7 +152,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
 
             while (!isCancelled)
             {
-                await UniTask.NextFrame();
+                
 
                 var currentState = _stateMachine.GetCurrentState();
 
@@ -159,9 +161,6 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
                 var raycastHits = Physics.SphereCastAll(transform.position + new Vector3(0f, characterMovementConfig.CharacterHeight, 0f),
                     characterMovementConfig.CharacterRadius, Vector3.down, characterMovementConfig.CharacterHeight, LayerMask.GetMask("CharacterBlocker"));
 
-                Debug.Log(currentState.Identifier);
-
-                /*
                 if (raycastHits.Length == 0) isGrounded = true;
                 else
                 {
@@ -193,7 +192,6 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
                         }
                     }
                 }
-                */
 
                 //if (!isGrounded && (currentState.Identifier != "FallingState")) _stateMachine.SwitchToState<FallingState>();
 
@@ -203,53 +201,79 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
 
                 switch (currentState.Identifier)
                 {
-                    case "IdleState":
+                    case "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.IdleState":
                         if (_inputVector != Vector2.zero)
                         {
                             _stateMachine.SwitchToState<AcceleratingState, Vector2>(_inputVector);
                         }
-                        continue;
+                        else
+                        {
+                            await UniTask.NextFrame();
+                        }
+                        break;
                 
-                    case "AcceleratingState":
+                    case "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.AcceleratingState":
                         if (_movementVector.sqrMagnitude >= characterMovementConfig.MAXSpeed * characterMovementConfig.MAXSpeed)
                         {
                             _stateMachine.SwitchToState<MovingState, Vector2>(_inputVector);
+                        }
+                        else
+                        {
+                            await UniTask.NextFrame();
                         }
 
                         if (_inputVector == Vector2.zero)
                         {
                             _stateMachine.SwitchToState<DeceleratingState>();
                         }
-                        continue;
+                        else
+                        {
+                            await UniTask.NextFrame();
+                        }
+                        break;
                 
-                    case "MovingState":
+                    case "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.MovingState":
                         if (_inputVector == Vector2.zero)
                         {
                             _stateMachine.SwitchToState<DeceleratingState>();
                         }
-                        continue;
+                        else
+                        {
+                            await UniTask.NextFrame();
+                        }
+                        break;
                 
-                    case "DeceleratingState":
+                    case "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.DeceleratingState":
                         if (_movementVector.sqrMagnitude <= 0.01f)
                         {
                             _movementVector = Vector3.zero;
                             _stateMachine.SwitchToState<IdleState>();
                         }
-                        continue;
+                        else
+                        {
+                            await UniTask.NextFrame();
+                        }
+                        break;
                 
-                    case "FallingState":
+                    case "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.FallingState":
                         if (isGrounded)
                         {
                             _stateMachine.SwitchToState<IdleState>();
                         }
-                        continue;
+                        else
+                        {
+                            await UniTask.NextFrame();
+                        }
+                        break;
                 
                     default:
                         isCancelled = await UniTask.NextFrame(token).SuppressCancellationThrow();
-                        continue;
+                        break;
                 }
             }
         }
+
+        */
 
         // EnqueueState
         
