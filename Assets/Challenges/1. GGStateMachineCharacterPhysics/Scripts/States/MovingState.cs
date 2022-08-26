@@ -57,7 +57,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
                     Debug.Log("State has changed to DeceleratingState.");
                     return;
                 }
-                var resultVector = new Vector3(inputVector.x, 0f, inputVector.y) * _config.MAXSpeed / (_staticWaitTime + _dynamicWaitTime);
+                var resultVector = new Vector3(inputVector.x, 0f, inputVector.y) * _config.MAXSpeed;
 
                 var hits = Physics.SphereCastAll(_characterTransform.position + Vector3.up * _config.CharacterHeight,
                     _config.CharacterRadius, Vector3.down, _config.CharacterHeight + 0.1f, LayerMask.GetMask("CharacterBlocker"));
