@@ -1,26 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading;
-using Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours;
 using Cysharp.Threading.Tasks;
 using GGPlugins.GGStateMachine.Scripts.Abstract;
 using UnityEngine;
 
 namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
 {
-    public class AcceleratingState : GGStateBase<Transform>
+    public class AcceleratingState : GGStateBase<float, Transform>
     {
+        private readonly float _staticWaitTime;
         private readonly MonoBehaviours.CharacterController _controller;
         private readonly MonoBehaviours.CharacterMovementConfig _config;
+        private float _dynamicWaitTime;
         private Transform _characterTransform;
 
-        public AcceleratingState(MonoBehaviours.CharacterController controller, MonoBehaviours.CharacterMovementConfig config)
+        public AcceleratingState(float time, MonoBehaviours.CharacterController controller, MonoBehaviours.CharacterMovementConfig config)
         {
+            _staticWaitTime = time;
             _controller = controller;
             _config = config;
         }
         
-        public override void Setup(Transform transform)
+        public override void Setup(float time, Transform transform)
         {
+            _dynamicWaitTime = time;
             _characterTransform = transform;
+        }
+
+        private Vector3 FindHighestPoint(List<Vector3> list)
+        {
+            var highest = Vector3.zero;
+            if (list.Count == 0)
+            {
+                return highest;
+            }
+            else
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (i == 0) highest = list[i];
+                    else highest = (list[i].y >= list[i - 1].y) ? list[i] : list[i - 1];
+                }
+                return highest;
+            }
         }
 
         public override async UniTask Entry(CancellationToken cancellationToken)
@@ -30,63 +54,72 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
                 var inputVector = _controller.GetInputVector();
                 if (inputVector == Vector2.zero)
                 {
-                    StateMachine.SwitchToState<DeceleratingState, Transform>(_characterTransform);
+                    StateMachine.SwitchToState<DeceleratingState, float, Transform>(_dynamicWaitTime,_characterTransform);
                     Debug.Log("State has changed to DeceleratingState.");
                     return;
                 }
                 var movementVector = _controller.GetMovementVector();
                 if (movementVector.magnitude >= _config.MAXSpeed)
                 {
-                    StateMachine.SwitchToState<MovingState, Transform>(_characterTransform);
+                    StateMachine.SwitchToState<MovingState, float, Transform>(_dynamicWaitTime, _characterTransform);
                     Debug.Log("State has changed to MovingState.");
                     return;
                 }
-                movementVector += new Vector3(inputVector.x, 0f, inputVector.y) * _config.AccelerationByTime;
-                // set mov x and set mov z
+                movementVector += new Vector3(inputVector.x, 0f, inputVector.y) * _config.AccelerationByTime / (_staticWaitTime + _dynamicWaitTime);
 
-                var isGrounded = false;
                 var hits = Physics.SphereCastAll(_characterTransform.position + Vector3.up * _config.CharacterHeight,
                     _config.CharacterRadius, Vector3.down, _config.CharacterHeight, LayerMask.GetMask("CharacterBlocker"));
+                var lowerHits = new List<Vector3>();
+                var middleHits = new List<Vector3>();
+                var higherHits = new List<Vector3>();
                 for (int i = 0; i < hits.Length; i++)
                 {
                     if (hits[i].point.y <= _characterTransform.position.y)
                     {
-                        isGrounded = true;
+                        lowerHits.Add(hits[i].point);
                     }
-                    else if (hits[i].point.y <= _characterTransform.position.y + _controller.StepHeightLimit)
+                    else if (hits[i].point.y > _characterTransform.position.y && hits[i].point.y <= _characterTransform.position.y + _controller.StepHeightLimit)
                     {
-                        var obstacleDir = (hits[i].point - _characterTransform.position).normalized;
-                        bool isTooSteep = Physics.Raycast(_characterTransform.position + Vector3.up * _controller.StepHeightLimit,
-                            obstacleDir, _config.CharacterRadius + 0.5f, LayerMask.GetMask("CharacterBlocker"));
-                        if (isTooSteep)
-                        {
-                            var blockingForceMagnitude = Vector3.Dot(movementVector, obstacleDir);
-                            movementVector -= movementVector.normalized * blockingForceMagnitude;
-                        }
-                        else
-                        {
-                            _characterTransform.position = new Vector3(_characterTransform.position.x, hits[i].point.y, _characterTransform.position.z);
-                        }
+                        middleHits.Add(hits[i].point);
                     }
                     else
                     {
-                        //var obstacleDir = (hits[i].point - _characterTransform.position).normalized;
-                        //var blockingForceMagnitude = Vector3.Dot(movementVector, obstacleDir);
-                        //movementVector -= movementVector.normalized * blockingForceMagnitude;
+                        higherHits.Add(hits[i].point);
                     }
+                }
+
+                if (lowerHits.Count > 0)
+                {
+                    var highest = FindHighestPoint(lowerHits);
+                    _characterTransform.position = new Vector3(_characterTransform.position.x, highest.y, _characterTransform.position.z);
+                }
+                if (middleHits.Count > 0)
+                {
+                    var highest = FindHighestPoint(middleHits);
+                    var checkingDist = 1 / Mathf.Tan(_controller.MaxStepAngleInRadians);
+                    var ray = new Ray(highest + Vector3.up, movementVector);
+                    bool isTooSteep = Physics.Raycast(ray, checkingDist, LayerMask.GetMask("CharacterBlocker"));
+                    if (!isTooSteep)
+                    {
+                        _characterTransform.position = new Vector3(_characterTransform.position.x, highest.y, _characterTransform.position.z);
+                    }
+                    else
+                    {
+                        //movementVector = Vector3.zero;
+                        Debug.Log("Too steep!");
+                    }
+                }
+                if (higherHits.Count > 0)
+                {
+                    //movementVector = Vector3.zero;
+                    Debug.Log("Wall detected!");
                 }
 
                 _controller.SetMovementVectorX(movementVector.x);
                 _controller.SetMovementVectorZ(movementVector.z);
-
-                //if (!isGrounded)
-                //{
-                //    StateMachine.SwitchToState<FallingState, Transform>(_characterTransform);
-                //    Debug.Log("State has changed to FallingState.");
-                //    return;
-                //}
-
-                await UniTask.NextFrame();
+                _characterTransform.Translate(movementVector * (_staticWaitTime + _dynamicWaitTime));
+                await UniTask.Delay(TimeSpan.FromSeconds(_staticWaitTime + _dynamicWaitTime), cancellationToken: cancellationToken);
+                // await UniTask.NextFrame();
             }
         }
 

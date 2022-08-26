@@ -109,7 +109,10 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
         private float _movementVectorX;
         private float _movementVectorY;
         private float _movementVectorZ;
-        private float _stepHeightLimit = 0.5f;
+        private float _staticWaitTime = 0.005f;
+        private float _dynamicWaitTime = 0.005f;
+        private float _stepHeightLimit = 1.5f;
+        private float _maxStepAngleInRadians = 2 * Mathf.PI / 3;
 
         public Vector2 GetInputVector() => _inputVector;
         public Vector3 GetMovementVector() => new Vector3(_movementVectorX, _movementVectorY, _movementVectorZ);
@@ -117,20 +120,21 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
         public void SetMovementVectorY(float y) { _movementVectorY = y; }
         public void SetMovementVectorZ(float z) { _movementVectorZ = z; }
         public float StepHeightLimit => _stepHeightLimit;
+        public float MaxStepAngleInRadians => _maxStepAngleInRadians;
 
         //Add your states under this function
         private void SetupStateMachineStates()
         {
-            _stateMachine.RegisterUniqueState(new AcceleratingState(this, characterMovementConfig));
-            _stateMachine.RegisterUniqueState(new MovingState(this, characterMovementConfig));
-            _stateMachine.RegisterUniqueState(new DeceleratingState(this, characterMovementConfig));
+            _stateMachine.RegisterUniqueState(new AcceleratingState(_staticWaitTime, this, characterMovementConfig));
+            _stateMachine.RegisterUniqueState(new MovingState(_staticWaitTime, this, characterMovementConfig));
+            _stateMachine.RegisterUniqueState(new DeceleratingState(_staticWaitTime, this, characterMovementConfig));
             _stateMachine.RegisterUniqueState(new FallingState(this, characterMovementConfig));
         }
 
         private void Update()
         {
             var movementVector = new Vector3(_movementVectorX, _movementVectorY, _movementVectorZ);
-            transform.Translate(movementVector * Time.deltaTime);
+            //transform.Translate(movementVector * Time.deltaTime);
 
             if (_stateMachine == null) return;
 
@@ -138,142 +142,10 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
 
             if ((_inputVector != Vector2.zero) && (currentState.Identifier == "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.IdleState"))
             {
-                _stateMachine.SwitchToState<AcceleratingState, Transform>(transform);
+                _stateMachine.SwitchToState<AcceleratingState, float, Transform>(_dynamicWaitTime, transform);
                 Debug.Log("State has changed to AcceleratingState.");
             }
         }
-
-        /*
-        private async UniTask StateMachineController(CancellationToken token)
-        {
-            var isCancelled = false;
-
-            _stateMachine.SwitchToState<IdleState>();
-
-            while (!isCancelled)
-            {
-                
-
-                var currentState = _stateMachine.GetCurrentState();
-
-                bool isGrounded = false;
-
-                var raycastHits = Physics.SphereCastAll(transform.position + new Vector3(0f, characterMovementConfig.CharacterHeight, 0f),
-                    characterMovementConfig.CharacterRadius, Vector3.down, characterMovementConfig.CharacterHeight, LayerMask.GetMask("CharacterBlocker"));
-
-                if (raycastHits.Length == 0) isGrounded = true;
-                else
-                {
-                    for (int i = 0; i < raycastHits.Length; i++)
-                    {
-                        // Check if character is grounded
-                        if (raycastHits[i].point.y <= transform.position.y) isGrounded = true;
-                
-                        // Check if object moving against a collider, apply reacting force
-                        if (raycastHits[i].point.y > 0)
-                        {
-                            var posVec = raycastHits[i].point - transform.position;
-                            var xzVec = new Vector3(posVec.x, 0f, posVec.z);
-                            var dot = Vector3.Dot(_movementVector, xzVec.normalized);
-                
-                            if (raycastHits[i].point.y - transform.position.y > _stepHeightLimit)
-                            {
-                                _movementVector -= _movementVector * dot;
-                            }
-                            else
-                            {
-                                // Check if step is too steep or not
-                                Ray stepCheck = new Ray(transform.position + new Vector3(0, _stepHeightLimit, 0), xzVec);
-                                if (!Physics.Raycast(stepCheck, characterMovementConfig.CharacterRadius + 0.5f, LayerMask.GetMask("CharacterBlocker")))
-                                {
-                                    transform.Translate(new Vector3(transform.position.x, raycastHits[i].point.y, transform.position.z));
-                                }
-                            }
-                        }
-                    }
-                }
-
-                //if (!isGrounded && (currentState.Identifier != "FallingState")) _stateMachine.SwitchToState<FallingState>();
-
-                //IdleState test = new IdleState();
-                //Type type = test.GetType();
-                //string str = type.ToString();
-
-                switch (currentState.Identifier)
-                {
-                    case "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.IdleState":
-                        if (_inputVector != Vector2.zero)
-                        {
-                            _stateMachine.SwitchToState<AcceleratingState, Vector2>(_inputVector);
-                        }
-                        else
-                        {
-                            await UniTask.NextFrame();
-                        }
-                        break;
-                
-                    case "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.AcceleratingState":
-                        if (_movementVector.sqrMagnitude >= characterMovementConfig.MAXSpeed * characterMovementConfig.MAXSpeed)
-                        {
-                            _stateMachine.SwitchToState<MovingState, Vector2>(_inputVector);
-                        }
-                        else
-                        {
-                            await UniTask.NextFrame();
-                        }
-
-                        if (_inputVector == Vector2.zero)
-                        {
-                            _stateMachine.SwitchToState<DeceleratingState>();
-                        }
-                        else
-                        {
-                            await UniTask.NextFrame();
-                        }
-                        break;
-                
-                    case "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.MovingState":
-                        if (_inputVector == Vector2.zero)
-                        {
-                            _stateMachine.SwitchToState<DeceleratingState>();
-                        }
-                        else
-                        {
-                            await UniTask.NextFrame();
-                        }
-                        break;
-                
-                    case "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.DeceleratingState":
-                        if (_movementVector.sqrMagnitude <= 0.01f)
-                        {
-                            _movementVector = Vector3.zero;
-                            _stateMachine.SwitchToState<IdleState>();
-                        }
-                        else
-                        {
-                            await UniTask.NextFrame();
-                        }
-                        break;
-                
-                    case "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.FallingState":
-                        if (isGrounded)
-                        {
-                            _stateMachine.SwitchToState<IdleState>();
-                        }
-                        else
-                        {
-                            await UniTask.NextFrame();
-                        }
-                        break;
-                
-                    default:
-                        isCancelled = await UniTask.NextFrame(token).SuppressCancellationThrow();
-                        break;
-                }
-            }
-        }
-
-        */
 
         // EnqueueState
         

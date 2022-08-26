@@ -29,7 +29,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
                 var inputVector = _controller.GetInputVector();
                 if (inputVector == Vector2.zero)
                 {
-                    StateMachine.SwitchToState<DeceleratingState, Transform>(_characterTransform);
+                    //StateMachine.SwitchToState<DeceleratingState, Transform>(_characterTransform);
                     Debug.Log("State has changed to DeceleratingState.");
                     return;
                 }
