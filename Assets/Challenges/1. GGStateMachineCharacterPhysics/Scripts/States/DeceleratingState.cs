@@ -51,7 +51,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
             while ((_controller != null) && (_config != null))
             {
                 var movementVector = _controller.GetMovementVector();
-                var resultVector = movementVector - movementVector.normalized * _config.AccelerationByTime / (_staticWaitTime + _dynamicWaitTime);
+                var resultVector = movementVector - movementVector.normalized * _config.AccelerationByTime;
                 if ((movementVector.magnitude <= 0.1f) || (Vector3.Dot(movementVector, resultVector) < 0))
                 {
                     StateMachine.SwitchToState<IdleState>();

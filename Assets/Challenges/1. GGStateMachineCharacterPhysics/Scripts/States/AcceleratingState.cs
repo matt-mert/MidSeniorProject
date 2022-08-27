@@ -65,7 +65,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
                     Debug.Log("State has changed to MovingState.");
                     return;
                 }
-                movementVector += new Vector3(inputVector.x, 0f, inputVector.y) * _config.AccelerationByTime / (_staticWaitTime + _dynamicWaitTime);
+                movementVector += new Vector3(inputVector.x, 0f, inputVector.y) * _config.AccelerationByTime;
 
                 var hits = Physics.SphereCastAll(_characterTransform.position + Vector3.up * _config.CharacterHeight,
                     _config.CharacterRadius, Vector3.down, _config.CharacterHeight, LayerMask.GetMask("CharacterBlocker"));
