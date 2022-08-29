@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Challenges._1._GGStateMachineCharacterPhysics.Scripts.States;
 using GGPlugins.GGStateMachine.Scripts.Abstract;
 using GGPlugins.GGStateMachine.Scripts.Data;
@@ -101,16 +100,18 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
 
         // You should only need to edit in this region, you can add any variables you wish.
 
+        private float _loopDeltaTime = 0.01f;
+        // LoopDeltaTime has a dramatic impact on performance.
+
         private Vector2 _inputVector;
-        private float _stepHeightLimit = 0.5f;
-        private float _maxStepAngleInRadians = 2 * Mathf.PI / 3;
+        private float _stepHeightLimit = 0.3f;
+        private float _stepAngleLimit = 30f;
         private bool _currentStateCancelled = false;
 
         public Vector2 InputVector => _inputVector;
         public float StepHeightLimit => _stepHeightLimit;
-        public float MaxStepAngleInRadians => _maxStepAngleInRadians;
+        public float StepAngleLimit => _stepAngleLimit;
         public bool CurrentStateCancelled => _currentStateCancelled;
-
         public void CancelCurrentState()
         {
             _currentStateCancelled = true;
@@ -134,21 +135,12 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
             if ((_inputVector != Vector2.zero) && (currentState.Identifier == "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.IdleState"))
             {
                 _currentStateCancelled = false;
-                _stateMachine.SwitchToState<AcceleratingState>();
+                _stateMachine.SwitchToState<AcceleratingState, float>(_loopDeltaTime);
                 Debug.Log("State has changed to AcceleratingState.");
             }
         }
-
-        // EnqueueState
         
         // CharacterInput.cs will call this function every frame in Update. xzPlaneMovementVector specifies the current input.
-        // Ex:
-        // (W is pressed) -> (0,1) ;
-        // (W and D) -> (1,1) ;
-        // (W and S) -> (0,0) ;
-        // (A and S) -> (-1,-1) ;
-        // (A) -> (-1,0)
-
         public void SetCurrentMovement(Vector2 xzPlaneMovementVector)
         {
             _inputVector = xzPlaneMovementVector;

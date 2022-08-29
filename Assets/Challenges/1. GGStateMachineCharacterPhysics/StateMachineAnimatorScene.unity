@@ -963,19 +963,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 569653574970678618, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
       propertyPath: characterMovementConfig.maxSpeed
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 569653574970678618, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
       propertyPath: characterMovementConfig.accelerationByTime
-      value: 16
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 569653574970678618, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
       propertyPath: characterMovementConfig.noInputVelocityDamping
-      value: 0.985
+      value: 0.996
       objectReference: {fileID: 0}
     - target: {fileID: 569653574970678618, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
       propertyPath: characterMovementConfig.midAirXZVelocityDamping
-      value: 0.985
+      value: 0.97
       objectReference: {fileID: 0}
     - target: {fileID: 569653574970678618, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
       propertyPath: characterMovementConfig.withInputVelocityDamping

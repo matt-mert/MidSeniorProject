@@ -7,10 +7,11 @@ using UnityEngine;
 
 namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
 {
-    public class FallingState : GGStateBase<Vector3>
+    public class FallingState : GGStateBase<float, Vector3>
     {
         private readonly MonoBehaviours.CharacterController _controller;
         private readonly MonoBehaviours.CharacterMovementConfig _config;
+        private float _deltaTime;
         private Vector3 _movementVectorBeforeFalling;
 
         public FallingState(MonoBehaviours.CharacterController controller, MonoBehaviours.CharacterMovementConfig config)
@@ -19,8 +20,9 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
             _config = config;
         }
 
-        public override void Setup(Vector3 vector)
+        public override void Setup(float time, Vector3 vector)
         {
+            _deltaTime = time;
             _movementVectorBeforeFalling = vector;
         }
 
@@ -54,7 +56,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
             while ((_controller != null) && (_config != null))
             {
                 var charPos = _controller.transform.position;
-                movementVector += Vector3.down * gravity * 0.01f;
+                movementVector += Vector3.down * gravity * _deltaTime;
 
                 var hits = Physics.SphereCastAll(charPos + Vector3.up * charHeight,
                     charRadius / 2f, Vector3.down, charHeight - charRadius / 2f, LayerMask.GetMask("CharacterBlocker"));
@@ -79,8 +81,8 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
 
                 movementVector.x *= midAirXZDamp;
                 movementVector.z *= midAirXZDamp;
-                _controller.transform.transform.Translate(movementVector * 0.01f);
-                await UniTask.Delay(TimeSpan.FromSeconds(0.01f), cancellationToken: cancellationToken);
+                _controller.transform.transform.Translate(movementVector * _deltaTime);
+                await UniTask.Delay(TimeSpan.FromSeconds(_deltaTime), cancellationToken: cancellationToken);
             }
         }
 
