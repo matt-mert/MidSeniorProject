@@ -7,6 +7,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
     public class FlowerDetector : MonoBehaviour, IStateMachineUser
     {
         private IGGStateMachine _stateMachine;
+        private CharacterController _controller;
         [SerializeField]
         private float flowerCollectRange;
         [SerializeField]
@@ -16,14 +17,20 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
         {
             _stateMachine = stateMachine;
         }
-        
+
+        private void Start()
+        {
+            _controller = GetComponent<CharacterController>();
+        }
 
         private void Update()
         {
             var closestFlower = Flower.GetClosestFlower(transform.position+centerOffset, out var distance);
             if (distance <= flowerCollectRange)
             {
+                _controller.CancelCurrentState();
                 _stateMachine.SwitchToState<FlowerEarnedState,float>(closestFlower.strength);
+                Debug.Log("State has been changed to FlowerEarnedState");
                 closestFlower.Earn();
             }
         }

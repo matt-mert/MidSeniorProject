@@ -7,25 +7,20 @@ using UnityEngine;
 
 namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
 {
-    public class MovingState : GGStateBase<float, Transform>
+    public class MovingState : GGStateBase
     {
-        private readonly float _staticWaitTime;
         private readonly MonoBehaviours.CharacterController _controller;
         private readonly MonoBehaviours.CharacterMovementConfig _config;
-        private float _dynamicWaitTime;
-        private Transform _characterTransform;
 
-        public MovingState(float time, MonoBehaviours.CharacterController controller, MonoBehaviours.CharacterMovementConfig config)
+        public MovingState(MonoBehaviours.CharacterController controller, MonoBehaviours.CharacterMovementConfig config)
         {
-            _staticWaitTime = time;
             _controller = controller;
             _config = config;
         }
 
-        public override void Setup(float time, Transform transform)
+        public override void Setup()
         {
-            _dynamicWaitTime = time;
-            _characterTransform = transform;
+
         }
 
         private Vector3 FindHighestPoint(List<Vector3> list)
@@ -48,71 +43,119 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
 
         public override async UniTask Entry(CancellationToken cancellationToken)
         {
-            while ((_controller != null) && (_config != null))
+            var isCancelled = _controller.CurrentStateCancelled;
+            var movementVector = Vector3.zero;
+            var sparseVector = Vector3.zero;
+            var frameCounter = 10;
+            var maxSpeed = _config.MAXSpeed;
+            var charHeight = _config.CharacterHeight;
+            var charRadius = _config.CharacterRadius;
+            var withInputDamp = _config.WithInputVelocityDamping;
+            var stepLimit = _controller.StepHeightLimit;
+            var slopeLimit = _controller.MaxStepAngleInRadians;
+
+            while ((_controller != null) && (_config != null) && (!isCancelled))
             {
-                var inputVector = _controller.GetInputVector();
+                var inputVector = _controller.InputVector.normalized;
+                var charPos = _controller.transform.position;
+
                 if (inputVector == Vector2.zero)
                 {
-                    StateMachine.SwitchToState<DeceleratingState, float, Transform>(_dynamicWaitTime, _characterTransform);
-                    Debug.Log("State has changed to DeceleratingState.");
+                    StateMachine.SwitchToState<DeceleratingState, Vector3>(sparseVector);
+                    Debug.Log("State has been changed to DeceleratingState.");
                     return;
                 }
-                var resultVector = new Vector3(inputVector.x, 0f, inputVector.y) * _config.MAXSpeed;
 
-                var hits = Physics.SphereCastAll(_characterTransform.position + Vector3.up * _config.CharacterHeight,
-                    _config.CharacterRadius, Vector3.down, _config.CharacterHeight + 0.1f, LayerMask.GetMask("CharacterBlocker"));
-                var lowerHits = new List<Vector3>();
-                var middleHits = new List<Vector3>();
-                var higherHits = new List<Vector3>();
+                movementVector = new Vector3(inputVector.x, 0f, inputVector.y) * maxSpeed;
+
+                var hits = Physics.SphereCastAll(charPos + Vector3.up * charHeight,
+                    charRadius / 2f, Vector3.down, charHeight, LayerMask.GetMask("CharacterBlocker"));
+                var groundHits = new List<Vector3>();
+
                 for (int i = 0; i < hits.Length; i++)
                 {
-                    if (hits[i].point.y <= _characterTransform.position.y)
+                    if (hits[i].point.y < charPos.y + stepLimit)
                     {
-                        lowerHits.Add(hits[i].point);
+                        groundHits.Add(hits[i].point);
                     }
-                    else if (hits[i].point.y > _characterTransform.position.y && hits[i].point.y <= _characterTransform.position.y + _controller.StepHeightLimit)
-                    {
-                        middleHits.Add(hits[i].point);
-                    }
-                    else if (hits[i].point.y > _characterTransform.position.y + _controller.StepHeightLimit)
-                    {
-                        higherHits.Add(hits[i].point);
-                    }
-                }
-                
-                if (lowerHits.Count > 0)
-                {
-                    var highest = FindHighestPoint(lowerHits);
-                    _characterTransform.position = new Vector3(_characterTransform.position.x, highest.y, _characterTransform.position.z);
-                }
-                if (middleHits.Count > 0)
-                {
-                    var highest = FindHighestPoint(middleHits);
-                    var checkingDist = 1 / Mathf.Tan(_controller.MaxStepAngleInRadians);
-                    var ray = new Ray(highest + Vector3.up, resultVector);
-                    bool isTooSteep = Physics.Raycast(ray, checkingDist, LayerMask.GetMask("CharacterBlocker"));
-                    if (!isTooSteep)
-                    {
-                        _characterTransform.position = new Vector3(_characterTransform.position.x, highest.y, _characterTransform.position.z);
-                    }
-                    else
-                    {
-
-                        //resultVector = Vector3.zero;
-                        Debug.Log("Too steep!");
-                    }
-                }
-                if (higherHits.Count > 0)
-                {
-                    //resultVector = Vector3.zero;
-                    Debug.Log("Wall detected!");
                 }
 
-                _controller.SetMovementVectorX(resultVector.x);
-                _controller.SetMovementVectorZ(resultVector.z);
-                _characterTransform.Translate(resultVector * (_staticWaitTime + _dynamicWaitTime));
-                await UniTask.Delay(TimeSpan.FromSeconds(_staticWaitTime + _dynamicWaitTime), cancellationToken: cancellationToken);
-                // await UniTask.NextFrame();
+                if (groundHits.Count > 0)
+                {
+                    var highest = FindHighestPoint(groundHits);
+
+                    _controller.transform.position = new Vector3(charPos.x, highest.y, charPos.z);
+                }
+                //if (groundHits.Count > 0)
+                //{
+                //    var highest = FindHighestPoint(groundHits);
+                //    
+                //    if (highest.y > charPos.y)
+                //    {
+                //        var checkingDist = 1 / Mathf.Tan(slopeLimit);
+                //        var checkingRay = new Ray(highest + Vector3.up, movementVector);
+                //        var isTooSteep = Physics.Raycast(checkingRay, checkingDist, LayerMask.GetMask("CharacterBlocker"));
+                //        if (!isTooSteep)
+                //        {
+                //            _controller.transform.position = new Vector3(charPos.x, highest.y, charPos.z);
+                //            Debug.Log("Step was not too steep. Stepping up.");
+                //        }
+                //        else
+                //        {
+                //            var xzDir = new Vector3(highest.x - charPos.x, 0, highest.z - charPos.z);
+                //            movementVector -= Vector3.Project(movementVector, xzDir);
+                //            Debug.Log("Step is too steep! Not stepping up.");
+                //        }
+                //    }
+                //    else
+                //    {
+                //        _controller.transform.position = new Vector3(charPos.x, highest.y, charPos.z);
+                //    }
+                //}
+                else
+                {
+                    StateMachine.SwitchToState<FallingState, Vector3>(sparseVector);
+                    Debug.Log("State has been changed to FallingState.");
+                    return;
+                }
+
+                //hits = Physics.SphereCastAll(charPos, charRadius + 0.05f, Vector3.up, charHeight, LayerMask.GetMask("CharacterBlocker"));
+                //var wallHits = new List<Vector3>();
+                //
+                //for (int i = 0; i < hits.Length; i++)
+                //{
+                //    if ((hits[i].point.y >= charPos.y + stepLimit) && (hits[i].point.y < charPos.y + charHeight))
+                //    {
+                //        wallHits.Add(hits[i].point);
+                //    }
+                //}
+                //
+                //if (wallHits.Count > 0)
+                //{
+                //    for (int i = 0; i < wallHits.Count; i++)
+                //    {
+                //        var xzDir = new Vector3(wallHits[i].x - charPos.x, 0, wallHits[i].z - charPos.z);
+                //        movementVector -= Vector3.Project(movementVector, xzDir);
+                //    }
+                //    Debug.Log("Wall detected!");
+                //}
+
+                //movementVector *= generalDamp * withInputDamp;
+
+                if (frameCounter == 10)
+                {
+                    sparseVector = movementVector;
+                    frameCounter = 0;
+                }
+                else
+                {
+                    frameCounter++;
+                }
+
+                movementVector *= withInputDamp;
+                _controller.transform.Translate(movementVector * 0.01f);
+                await UniTask.Delay(TimeSpan.FromSeconds(0.01f), cancellationToken: cancellationToken);
+                isCancelled = _controller.CurrentStateCancelled;
             }
         }
 

@@ -33,6 +33,7 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.States
             _headTransform.DOPunchScale(Vector3.one * _strength, _time, 7);
             await _characterTransform.DOPunchScale(Vector3.one * _strength, _time, 7).AsyncWaitForCompletion();
             StateMachine.SwitchToState<IdleState>();
+            Debug.Log("State has been changed to IdleState");
         }
 
         public override async UniTask Exit(CancellationToken cancellationToken)

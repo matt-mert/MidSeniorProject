@@ -961,6 +961,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 569653574970678618, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
+      propertyPath: characterMovementConfig.maxSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 569653574970678618, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
+      propertyPath: characterMovementConfig.accelerationByTime
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 569653574970678618, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
+      propertyPath: characterMovementConfig.noInputVelocityDamping
+      value: 0.985
+      objectReference: {fileID: 0}
+    - target: {fileID: 569653574970678618, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
+      propertyPath: characterMovementConfig.midAirXZVelocityDamping
+      value: 0.985
+      objectReference: {fileID: 0}
+    - target: {fileID: 569653574970678618, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
+      propertyPath: characterMovementConfig.withInputVelocityDamping
+      value: 0.999
+      objectReference: {fileID: 0}
     - target: {fileID: 569653575225093869, guid: 1b7b2f7af7dd944f99098fcde840c131, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -1159,6 +1179,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: d2691b4986885492e9bdd91cd887df71, type: 2}
+    - target: {fileID: 4080851682505645001, guid: c2b2f1862f2b243668b9c86b13e63986, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4080851682597449878, guid: c2b2f1862f2b243668b9c86b13e63986, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 

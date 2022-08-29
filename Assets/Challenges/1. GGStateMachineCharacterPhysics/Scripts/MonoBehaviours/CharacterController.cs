@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Threading;
 using Challenges._1._GGStateMachineCharacterPhysics.Scripts.States;
 using GGPlugins.GGStateMachine.Scripts.Abstract;
 using GGPlugins.GGStateMachine.Scripts.Data;
 using GGPlugins.GGStateMachine.Scripts.Installers;
-using TMPro.EditorUtilities;
 using UnityEditor;
 using UnityEngine;
 using Zenject;
@@ -99,50 +99,42 @@ namespace Challenges._1._GGStateMachineCharacterPhysics.Scripts.MonoBehaviours
 
         #region EDIT
 
-        // Note: Movement can also be implemented so that character slows down when moving on
-        // an inclined ground, i.e. climbing a hill. However, the requirements document for
-        // the controller does not provide any information regarding this point.
-
         // You should only need to edit in this region, you can add any variables you wish.
 
         private Vector2 _inputVector;
-        private float _movementVectorX;
-        private float _movementVectorY;
-        private float _movementVectorZ;
-        private float _staticWaitTime = 0.005f;
-        private float _dynamicWaitTime = 0.005f;
-        private float _stepHeightLimit = 1.5f;
+        private float _stepHeightLimit = 0.5f;
         private float _maxStepAngleInRadians = 2 * Mathf.PI / 3;
+        private bool _currentStateCancelled = false;
 
-        public Vector2 GetInputVector() => _inputVector;
-        public Vector3 GetMovementVector() => new Vector3(_movementVectorX, _movementVectorY, _movementVectorZ);
-        public void SetMovementVectorX(float x) { _movementVectorX = x; }
-        public void SetMovementVectorY(float y) { _movementVectorY = y; }
-        public void SetMovementVectorZ(float z) { _movementVectorZ = z; }
+        public Vector2 InputVector => _inputVector;
         public float StepHeightLimit => _stepHeightLimit;
         public float MaxStepAngleInRadians => _maxStepAngleInRadians;
+        public bool CurrentStateCancelled => _currentStateCancelled;
+
+        public void CancelCurrentState()
+        {
+            _currentStateCancelled = true;
+        }
 
         //Add your states under this function
         private void SetupStateMachineStates()
         {
-            _stateMachine.RegisterUniqueState(new AcceleratingState(_staticWaitTime, this, characterMovementConfig));
-            _stateMachine.RegisterUniqueState(new MovingState(_staticWaitTime, this, characterMovementConfig));
-            _stateMachine.RegisterUniqueState(new DeceleratingState(_staticWaitTime, this, characterMovementConfig));
+            _stateMachine.RegisterUniqueState(new AcceleratingState(this, characterMovementConfig));
+            _stateMachine.RegisterUniqueState(new MovingState(this, characterMovementConfig));
+            _stateMachine.RegisterUniqueState(new DeceleratingState(this, characterMovementConfig));
             _stateMachine.RegisterUniqueState(new FallingState(this, characterMovementConfig));
         }
 
         private void Update()
         {
-            var movementVector = new Vector3(_movementVectorX, _movementVectorY, _movementVectorZ);
-            //transform.Translate(movementVector * Time.deltaTime);
-
             if (_stateMachine == null) return;
 
             var currentState = _stateMachine.GetCurrentState();
 
             if ((_inputVector != Vector2.zero) && (currentState.Identifier == "Challenges._1._GGStateMachineCharacterPhysics.Scripts.States.IdleState"))
             {
-                _stateMachine.SwitchToState<AcceleratingState, float, Transform>(_dynamicWaitTime, transform);
+                _currentStateCancelled = false;
+                _stateMachine.SwitchToState<AcceleratingState>();
                 Debug.Log("State has changed to AcceleratingState.");
             }
         }
